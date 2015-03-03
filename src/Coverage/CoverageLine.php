@@ -53,4 +53,28 @@ class CoverageLine
         $this->content = $content;
         $this->state = $state;
     }
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLineNo()
+    {
+        return $this->lineNo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
 }
