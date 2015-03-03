@@ -1,0 +1,29 @@
+{
+    "name":         "ptlis/phpcm",
+    "description":  "Simple tool for monitoring test coverage.",
+    "license":      "MIT",
+    "keywords":     ["coverage", "test", "monitor"],
+    "type":         "library",
+    "authors": [
+        {
+            "name": "brian ridley",
+            "email":"ptlis@ptlis.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "symfony/console": "~2.6",
+        "symfony/var-dumper": "~2.6",
+        "ptlis/vcs": "@dev",
+        "ptlis/shell-command": "~0.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "ptlis\\CoverageMonitor\\": "src/",
+            "ptlis\\CoverageMonitor\\Test\\": "tests/"
+        }
+    }
+}

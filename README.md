@@ -1,6 +1,8 @@
-# phptr - PHP's test-responsibility
+# phpcm - PHP's Coverage Monitor
 
-A simple tool to determine how many newly lines of code were added vs how many lines were tested.
+
+A simple tool providing metrics on how well tested your project is over time as well as per-commit, per-contributor data..
+
 
 ## Goals
 
@@ -13,3 +15,9 @@ A simple tool to determine how many newly lines of code were added vs how many l
   * How many of these have associated tests.
   * How many existing lines of code previously weren't tested but now are.
 * We should be able to traverse the history of a project generating this data, as well as creating incremental builds using CI tools such as Jenkins.
+* Generate useful reports on the health of a project.
+    * Delta of tested LOC per commit.
+    * Identification of:
+        * Contributors with a positive impact on coverage.
+        * Contributors with a negative impact on coverage.
+    * Other interesting stuff?
