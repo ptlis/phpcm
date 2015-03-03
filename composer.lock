@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "ptlis/diff-parser",
-            "version": "v0.2.0",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ptlis/diff-parser.git",
-                "reference": "6387c15ee084d0666f96ddee2785e85ee7eff1bd"
+                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ptlis/diff-parser/zipball/6387c15ee084d0666f96ddee2785e85ee7eff1bd",
-                "reference": "6387c15ee084d0666f96ddee2785e85ee7eff1bd",
+                "url": "https://api.github.com/repos/ptlis/diff-parser/zipball/d98f11ca2047530a8d2f19950fa6f759bae16fe2",
+                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "parser",
                 "unified-diff"
             ],
-            "time": "2015-01-21 17:49:21"
+            "time": "2015-03-03 22:43:36"
         },
         {
             "name": "ptlis/shell-command",
@@ -115,18 +115,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ptlis/vcs.git",
-                "reference": "9b76d35389bed29e0ec4dc9fd4585ef430a30db7"
+                "reference": "295b87ca00f5d038ef10af05061d52ba0e9279fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ptlis/vcs/zipball/9b76d35389bed29e0ec4dc9fd4585ef430a30db7",
-                "reference": "9b76d35389bed29e0ec4dc9fd4585ef430a30db7",
+                "url": "https://api.github.com/repos/ptlis/vcs/zipball/295b87ca00f5d038ef10af05061d52ba0e9279fb",
+                "reference": "295b87ca00f5d038ef10af05061d52ba0e9279fb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
                 "ptlis/diff-parser": "~0.2",
-                "ptlis/shell-command": "~0.5"
+                "ptlis/shell-command": "~0.6"
             },
             "require-dev": {
                 "pdepend/pdepend": "~1.1",
@@ -159,7 +159,7 @@
                 "version",
                 "version control"
             ],
-            "time": "2015-02-23 21:58:14"
+            "time": "2015-03-02 23:05:12"
         },
         {
             "name": "symfony/console",
