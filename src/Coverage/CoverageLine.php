@@ -35,7 +35,7 @@ class CoverageLine
     private $content;
 
     /**
-     * @var int
+     * @var int The coverage state, one of class constants.
      */
     private $state;
 
@@ -71,6 +71,8 @@ class CoverageLine
     }
 
     /**
+     * Get the coverage state, one of class constants.
+     *
      * @return int
      */
     public function getState()
