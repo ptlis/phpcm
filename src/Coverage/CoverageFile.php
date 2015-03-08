@@ -19,11 +19,23 @@ namespace ptlis\CoverageMonitor\Coverage;
  */
 class CoverageFile
 {
+    /**
+     * @var \PHP_CodeCoverage_Report_Node_File  PHPUnit coverage object.
+     */
     private $file;
 
+    /**
+     * @var string  The working directory during test execution.
+     */
     private $workingDirectory;
 
 
+    /**
+     * Constructor.
+     *
+     * @param \PHP_CodeCoverage_Report_Node_File $file
+     * @param string $workingDirectory
+     */
     public function __construct(\PHP_CodeCoverage_Report_Node_File $file, $workingDirectory)
     {
         $this->file = $file;
@@ -36,6 +48,11 @@ class CoverageFile
         }
     }
 
+    /**
+     * The filename.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->file->getName();
