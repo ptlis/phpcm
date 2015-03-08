@@ -13,6 +13,7 @@
 
 namespace ptlis\CoverageMonitor\Command;
 
+use ptlis\CoverageMonitor\Coverage\CoverageClover;
 use ptlis\ShellCommand\ShellCommandBuilder;
 use ptlis\ShellCommand\UnixEnvironment;
 use ptlis\CoverageMonitor\CommandWrapper\ComposerUpdate;
@@ -121,7 +122,7 @@ class TestCommand extends Command
             $coveragePath = tempnam(sys_get_temp_dir(), 'coverage_monitor_');
 
             $this->writeInitialOutput($output, '    Running PHPUnit');
-            $phpUnitResult = $phpUnitCommand->run($workingDirectory, array('--coverage-php=' . $coveragePath));
+            $phpUnitResult = $phpUnitCommand->run($workingDirectory, array('--coverage-clover=' . $coveragePath));
 
             if (0 !== $phpUnitResult->getExitCode()) {
                 $output->write(' <command-error>Fail</command-error>', true);
@@ -133,18 +134,11 @@ class TestCommand extends Command
 
 
             $this->writeInitialOutput($output, '    Processing Results');
+
+            $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
+
             $output->write(' <command-success>Done</command-success>', true);
 
-            /** @var \PHP_CodeCoverage $coverage */
-            $coverage = unserialize(file_get_contents($coveragePath));
-
-            if (!($coverage instanceof \PHP_CodeCoverage)) {
-                echo file_get_contents($coveragePath) . PHP_EOL;
-
-                die();
-            }
-
-            $baseDirectory = new CoverageDirectory($coverage->getReport(), $workingDirectory);
             $changeset = $meta->getChangeset($revision);
 
 
@@ -152,8 +146,8 @@ class TestCommand extends Command
 
             $pairings = array();
             foreach ($changeset->getFiles() as $changedFile) {
-                foreach ($this->getAllFiles($baseDirectory) as $coverageFile) {
-                    if ($changedFile->getNewFilename() === $coverageFile->getPath()) {
+                foreach ($coverage->getFiles() as $coverageFile) {
+                    if ($changedFile->getNewFilename() === $coverageFile->getRelativePath()) {
                         $pairings[] = array(
                             'changed' => $changedFile,
                             'coverage' => $coverageFile
@@ -170,50 +164,6 @@ var_dump($pairings);
             $vcs->resetRevision();
 die();
 
-        }
-    }
-
-    /**
-     * Get all files covered by tests.
-     *
-     * @param CoverageDirectory $directory
-     *
-     * @return CoverageFile[]
-     */
-    private function getAllFiles(CoverageDirectory $directory)
-    {
-        $fileList = array();
-
-        foreach ($directory->getDirectories() as $childDirectory) {
-            $fileList = array_merge($fileList, $this->getAllFiles($childDirectory));
-        }
-
-        foreach ($directory->getFiles() as $file) {
-            $fileList[] = $file;
-        }
-
-        return $fileList;
-    }
-
-    private function iterateDirectoryNode(
-        OutputInterface $output,
-        CoverageDirectory $directory,
-        $depth = 0
-    ) {
-        foreach ($directory->getDirectories() as $childDirectory) {
-
-            $output->writeln(
-                str_pad('', 2 * $depth, ' ') . 'd ' . $childDirectory->getPath()
-            );
-
-            $this->iterateDirectoryNode($output, $childDirectory, $depth + 1);
-        }
-
-        foreach ($directory->getFiles() as $file) {
-            $output->writeln(
-                str_pad('', 2 * $depth, ' ') . 'f ' . $file->getPath()
-            );
-            $file->getLines();
         }
     }
 
