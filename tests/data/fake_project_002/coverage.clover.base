@@ -2,7 +2,7 @@
 <coverage generated="1425842767">
   <project timestamp="1425842767">
     <package name="Bar">
-      <file name="/home/brian/Desktop/dev/test-blame/tests/data/fake_project_002/src/Bar.php">
+      <file name="___PATH___/tests/data/fake_project_002/src/Bar.php">
         <class name="Bar" namespace="Bar">
           <metrics methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="8" coveredelements="6"/>
         </class>
@@ -18,7 +18,7 @@
       </file>
     </package>
     <package name="Foo">
-      <file name="/home/brian/Desktop/dev/test-blame/tests/data/fake_project_002/src/Foo.php">
+      <file name="___PATH___/tests/data/fake_project_002/src/Foo.php">
         <class name="Foo" namespace="Foo">
           <metrics methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="8" coveredelements="6"/>
         </class>
