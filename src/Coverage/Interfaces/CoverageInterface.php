@@ -12,6 +12,7 @@
  */
 
 namespace ptlis\CoverageMonitor\Coverage\Interfaces;
+
 use ptlis\CoverageMonitor\Coverage\CoverageFile;
 
 /**
