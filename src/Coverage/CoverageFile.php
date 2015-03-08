@@ -14,15 +14,19 @@
 namespace ptlis\CoverageMonitor\Coverage;
 
 /**
- * Adapter wrapping PHPUnit's \PHP_CodeCoverage_Report_Node_File class & exposing a more convenient interface for
- *  the purpose of this library.
+ * Contains the data for a single file's coverage data.
  */
 class CoverageFile
 {
     /**
-     * @var \PHP_CodeCoverage_Report_Node_File  PHPUnit coverage object.
+     * @var string The full path to the file.
      */
-    private $file;
+    private $filePath;
+
+    /**
+     * @var CoverageLine[] array of coverage lines for this file.
+     */
+    private $lineList;
 
     /**
      * @var string  The working directory during test execution.
@@ -33,16 +37,18 @@ class CoverageFile
     /**
      * Constructor.
      *
-     * @param \PHP_CodeCoverage_Report_Node_File $file
+     * @param string $filePath
+     * @param array $lineList
      * @param string $workingDirectory
      */
-    public function __construct(\PHP_CodeCoverage_Report_Node_File $file, $workingDirectory)
+    public function __construct($filePath, array $lineList, $workingDirectory)
     {
-        $this->file = $file;
-        $this->workingDirectory = realpath($workingDirectory);
+        $this->filePath = $filePath;
+        $this->lineList = $lineList;
+        $this->workingDirectory = $workingDirectory;
 
         // validation
-        $containingDirectory = substr($this->file->getPath(), 0, strlen($this->workingDirectory));
+        $containingDirectory = substr($this->filePath, 0, strlen($this->workingDirectory));
         if ($containingDirectory !== $this->workingDirectory) {
             throw new \RuntimeException('Incorrect working directory provided.');
         }
@@ -55,18 +61,29 @@ class CoverageFile
      */
     public function getName()
     {
-        return $this->file->getName();
+        $pathData = explode(DIRECTORY_SEPARATOR, $this->filePath);
+
+        return array_pop($pathData);
     }
 
     /**
-     * Get the relative path to the file.
+     * Get the full path of the file
      *
      * @return string
      */
-    public function getPath()
+    public function getFullPath()
     {
-        $fullPath = $this->file->getPath();
-        $path = substr($fullPath, strlen($this->workingDirectory), strlen($fullPath));
+        return $this->filePath;
+    }
+
+    /**
+     * Get the relative path of the file.
+     *
+     * @return string
+     */
+    public function getRelativePath()
+    {
+        $path = substr($this->filePath, strlen($this->workingDirectory), strlen($this->filePath));
         if (DIRECTORY_SEPARATOR === $path[0]) {
             $path = substr($path, 1, strlen($path));
         }
@@ -81,62 +98,6 @@ class CoverageFile
      */
     public function getLines()
     {
-        $coverageData = $this->file->getCoverageData();
-        $ignoredLines = $this->file->getIgnoredLines();
-        $testData = $this->file->getTestData();
-        $lines = file($this->file->getPath(), FILE_IGNORE_NEW_LINES);
-
-        $processedLineList = array();
-        for ($i = 0; $i < count($lines); $i++) {
-            $lineNo = $i + 1;
-
-            if (array_key_exists($lineNo, $ignoredLines)) {
-                $state = CoverageLine::SKIPPED;
-
-            } elseif (array_key_exists($lineNo, $coverageData)) {
-
-                // TODO: Stupid solution, need to figure out constants used around line 365 in
-                // \PHP_CodeCoverage_Report_HTML_Renderer_File to be smarter
-                $successCount = 0;
-                $notSuccessCount = 0;
-
-                if (is_array($coverageData[$lineNo])) {
-                    foreach ($coverageData[$lineNo] as $test) {
-                        if (array_key_exists($test, $testData)) {
-                            if (0 === $testData[$test]) {
-                                $successCount++;
-                            } else {
-                                $notSuccessCount++;
-                            }
-                        }
-                    }
-                }
-
-
-                // No tests for this line
-                if (0 == count($coverageData[$lineNo])) {
-                    $state = CoverageLine::UNCOVERED;
-
-                // All successful
-                } elseif (0 === $notSuccessCount && $successCount > 0) {
-                    $state = CoverageLine::SUCCESS;
-
-                // None successful
-                } elseif (0 === $successCount && $notSuccessCount > 0) {
-                    $state = CoverageLine::ERROR;
-
-                // Partial success
-                } else {
-                    $state = CoverageLine::PARTIAL_SUCCESS;
-                }
-
-            } else {
-                $state = CoverageLine::SKIPPED;
-            }
-
-            $processedLineList[] = new CoverageLine($lineNo, $lines[$i], $state);
-        }
-
-        return $processedLineList;
+        return $this->lineList;
     }
 }

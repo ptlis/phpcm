@@ -46,8 +46,8 @@ class LineRemovedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            CoverageLine::SKIPPED,
-            $removedLine->getCoverageState()
+            0,
+            $removedLine->getCoverageCount()
         );
     }
 

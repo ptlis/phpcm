@@ -22,7 +22,7 @@ class CoverageLineTest extends \PHPUnit_Framework_TestCase
         $file = new CoverageLine(
             10,
             '   $bar = new Baz();',
-            CoverageLine::ERROR
+            1
         );
 
         $this->assertEquals(
@@ -36,8 +36,8 @@ class CoverageLineTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            CoverageLine::ERROR,
-            $file->getState()
+            1,
+            $file->getCount()
         );
     }
 }

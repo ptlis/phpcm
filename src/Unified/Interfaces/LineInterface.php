@@ -47,9 +47,9 @@ interface LineInterface
     public function getContent();
 
     /**
-     * Get the coverage state of the line (one of ptlis\CoverageMonitor\Coverage\CoverageLine class constants).
+     * Get the number of times this line is covered by tests.
      *
      * @return int
      */
-    public function getCoverageState();
+    public function getCoverageCount();
 }

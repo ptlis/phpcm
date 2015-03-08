@@ -22,7 +22,7 @@ class LineAddedTest extends \PHPUnit_Framework_TestCase
     public function testCreateSuccess()
     {
         $addedLine = new LineAdded(
-            new CoverageLine(10, '    $foo = "bar";', CoverageLine::SUCCESS),
+            new CoverageLine(10, '    $foo = "bar";', 1),
             new Line(-1, 10, Line::ADDED, '    $foo = "bar";')
         );
 
@@ -47,8 +47,8 @@ class LineAddedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            CoverageLine::SUCCESS,
-            $addedLine->getCoverageState()
+            1,
+            $addedLine->getCoverageCount()
         );
     }
 
@@ -60,7 +60,7 @@ class LineAddedTest extends \PHPUnit_Framework_TestCase
         );
 
         new LineAdded(
-            new CoverageLine(10, '    $foo = "bar";', CoverageLine::SUCCESS),
+            new CoverageLine(10, '    $foo = "bar";', 1),
             new Line(10, 10, Line::UNCHANGED, '    $foo = "bar";')
         );
     }

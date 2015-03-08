@@ -17,14 +17,7 @@ namespace ptlis\CoverageMonitor\Coverage;
  * Class representing a signle line in a source file.
  */
 class CoverageLine
-{
-    const SKIPPED = 0;
-    const SUCCESS = 1;
-    const ERROR = 2;
-    const PARTIAL_SUCCESS = 3;
-    const UNCOVERED = 4;
-
-    /**
+{    /**
      * @var int
      */
     private $lineNo;
@@ -35,9 +28,9 @@ class CoverageLine
     private $content;
 
     /**
-     * @var int The coverage state, one of class constants.
+     * @var int Number of times covered by tests.
      */
-    private $state;
+    private $count;
 
 
     /**
@@ -45,13 +38,13 @@ class CoverageLine
      *
      * @param int $lineNo
      * @param string $content
-     * @param int $state
+     * @param int $count
      */
-    public function __construct($lineNo, $content, $state)
+    public function __construct($lineNo, $content, $count)
     {
         $this->lineNo = $lineNo;
         $this->content = $content;
-        $this->state = $state;
+        $this->count = $count;
     }
 
     /**
@@ -71,12 +64,12 @@ class CoverageLine
     }
 
     /**
-     * Get the coverage state, one of class constants.
+     * Get the number of times this line was covered by tests.
      *
      * @return int
      */
-    public function getState()
+    public function getCount()
     {
-        return $this->state;
+        return $this->count;
     }
 }

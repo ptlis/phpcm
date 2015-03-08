@@ -22,7 +22,7 @@ class LineUnchangedTest extends \PHPUnit_Framework_TestCase
     public function testCreateSuccess()
     {
         $addedLine = new LineUnchanged(
-            new CoverageLine(10, '    $foo = "bar";', CoverageLine::SUCCESS),
+            new CoverageLine(10, '    $foo = "bar";', 2),
             10
         );
 
@@ -47,8 +47,8 @@ class LineUnchangedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            CoverageLine::SUCCESS,
-            $addedLine->getCoverageState()
+            2,
+            $addedLine->getCoverageCount()
         );
     }
 }

@@ -90,8 +90,8 @@ class LineAdded implements LineInterface
     /**
      * {@inheritdoc}
      */
-    public function getCoverageState()
+    public function getCoverageCount()
     {
-        return $this->coverageLine->getState();
+        return $this->coverageLine->getCount();
     }
 }

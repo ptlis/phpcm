@@ -84,8 +84,8 @@ class LineRemoved implements LineInterface
     /**
      * {@inheritdoc}
      */
-    public function getCoverageState()
+    public function getCoverageCount()
     {
-        return CoverageLine::SKIPPED;
+        return 0;
     }
 }
