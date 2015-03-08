@@ -8,6 +8,7 @@
     <testsuites>
         <testsuite name="ConNeg">
             <directory suffix="Test.php">./tests/</directory>
+            <exclude>./tests/data/</exclude>    <!-- Includes several 'fake' projects for testing library -->
         </testsuite>
     </testsuites>
 

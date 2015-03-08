@@ -93,14 +93,8 @@ class CoverageClover implements CoverageInterface
         // Read file & line coverage data
         /** @var \SimpleXMLElement $project */
         foreach ($clover->children() as $project) {
-            switch ($project->getName()) {
-                case 'project':
-                    $this->readProjectData($project);
-                    break;
-
-                default:
-                    throw new \RuntimeException('Unknown element name "' . $project->getName() . '" encountered.');
-                    break;
+            if ('project' === $project->getName()) {
+                $this->readProjectData($project);
             }
         }
     }
@@ -125,10 +119,6 @@ class CoverageClover implements CoverageInterface
 
                 case 'metrics':
                     // TODO: Implement?
-                    break;
-
-                default:
-                    throw new \RuntimeException('Unknown element name "' . $child->getName() . '" encountered.');
                     break;
             }
         }
@@ -173,14 +163,8 @@ class CoverageClover implements CoverageInterface
     {
         /** @var \SimpleXMLElement $file */
         foreach ($package->children() as $file) {
-            switch ($file->getName()) {
-                case 'file':
-                    $this->readFileData($file);
-                    break;
-
-                default:
-                    throw new \RuntimeException('Unknown element name "' . $file->getName() . '" encountered.');
-                    break;
+            if ('file' === $file->getName()) {
+                $this->readFileData($file);
             }
         }
     }

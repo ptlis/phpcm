@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1425842767">
+  <project timestamp="1425842767">
+    <package name="Bar">
+      <file name="/home/brian/Desktop/dev/test-blame/tests/data/fake_project_002/src/Bar.php">
+        <class name="Bar" namespace="Bar">
+          <metrics methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="8" coveredelements="6"/>
+        </class>
+        <line num="18" type="method" name="__construct" crap="1" count="1"/>
+        <line num="20" type="stmt" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <line num="24" type="method" name="getBar" crap="2" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="29" type="method" name="getBaz" crap="1" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <metrics loc="33" ncloc="23" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="8" coveredelements="6"/>
+      </file>
+    </package>
+    <package name="Foo">
+      <file name="/home/brian/Desktop/dev/test-blame/tests/data/fake_project_002/src/Foo.php">
+        <class name="Foo" namespace="Foo">
+          <metrics methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="8" coveredelements="6"/>
+        </class>
+        <line num="18" type="method" name="__construct" crap="1" count="1"/>
+        <line num="20" type="stmt" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <line num="24" type="method" name="getBar" crap="1" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="29" type="method" name="getBaz" crap="2" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <metrics loc="33" ncloc="23" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="8" coveredelements="6"/>
+      </file>
+    </package>
+    <metrics files="2" loc="66" ncloc="46" classes="2" methods="6" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="8" elements="16" coveredelements="12"/>
+  </project>
+</coverage>
