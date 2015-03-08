@@ -26,15 +26,22 @@ class PhpUnit implements CommandWrapperInterface
      */
     private $commandBuilder;
 
+    /**
+     * @var string Path to PhpCM's phpunit command.
+     */
+    private $pathToPhpUnit;
+
 
     /**
      * Constructor.
      *
      * @param CommandBuilderInterface $commandBuilder
+     * @param string $pathToPhpUnit
      */
-    public function __construct(CommandBuilderInterface $commandBuilder)
+    public function __construct(CommandBuilderInterface $commandBuilder, $pathToPhpUnit)
     {
         $this->commandBuilder = $commandBuilder;
+        $this->pathToPhpUnit = $pathToPhpUnit;
     }
 
     /**
@@ -47,7 +54,7 @@ class PhpUnit implements CommandWrapperInterface
      */
     public function run($workingDirectory, array $arguments = array())
     {
-        $phpUnitPath = realpath(__DIR__ . '/../../vendor/bin/phpunit');
+        $phpUnitPath = $this->pathToPhpUnit;
 
         $command = $this->commandBuilder
             ->setCwd($workingDirectory)

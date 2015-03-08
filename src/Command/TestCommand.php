@@ -60,7 +60,10 @@ class TestCommand extends Command
         $commandBuilder = new ShellCommandBuilder(new UnixEnvironment());
 
         $composerUpCommand = new ComposerUpdate($commandBuilder);
-        $phpUnitCommand = new PhpUnit($commandBuilder);
+        $phpUnitCommand = new PhpUnit(
+            $commandBuilder,
+            realpath(__DIR__ . '/../../vendor/bin/phpunit')
+        );
 
         $workingDirectory = $input->getArgument('path');
 
