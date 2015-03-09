@@ -13,42 +13,42 @@
 
 namespace ptlis\CoverageMonitor\Test\Unit\Unified;
 
-use ptlis\CoverageMonitor\Coverage\CoverageLine;
-use ptlis\CoverageMonitor\Unified\LineUnchanged;
-use ptlis\DiffParser\Line;
+use ptlis\CoverageMonitor\Unified\LineNoCoverageUnchanged;
+use ptlis\DiffParser\Line as DiffLine;
 
-class LineUnchangedTest extends \PHPUnit_Framework_TestCase
+class LineNoCoverageUnchangedTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateSuccess()
+    public function testCreate()
     {
-        $addedLine = new LineUnchanged(
-            new CoverageLine(10, '    $foo = "bar";', 2),
-            10
+        $line = new LineNoCoverageUnchanged(
+            10,
+            11,
+            '    $foo = "bar";'
         );
 
         $this->assertEquals(
             10,
-            $addedLine->getOriginalLineNo()
+            $line->getOriginalLineNo()
         );
 
         $this->assertEquals(
-            10,
-            $addedLine->getNewLineNo()
+            11,
+            $line->getNewLineNo()
         );
 
         $this->assertEquals(
-            Line::UNCHANGED,
-            $addedLine->getOperation()
+            DiffLine::UNCHANGED,
+            $line->getOperation()
         );
 
         $this->assertEquals(
             '    $foo = "bar";',
-            $addedLine->getContent()
+            $line->getContent()
         );
 
         $this->assertEquals(
-            2,
-            $addedLine->getCoverageCount()
+            0,
+            $line->getCoverageCount()
         );
     }
 }

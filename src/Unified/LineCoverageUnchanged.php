@@ -18,11 +18,9 @@ use ptlis\CoverageMonitor\Unified\Interfaces\LineInterface;
 use ptlis\DiffParser\Line as DiffLine;
 
 /**
- * Added line.
- *
- * We need the diff & coverage lines to correctly present a unified representation of this line type.
+ * @todo 'Covered' is wrong term for this.
  */
-class LineAdded implements LineInterface
+class LineCoverageUnchanged implements LineInterface
 {
     /**
      * @var CoverageLine
@@ -30,29 +28,21 @@ class LineAdded implements LineInterface
     private $coverageLine;
 
     /**
-     * @var DiffLine
+     * @var int
      */
-    private $diffLine;
+    private $originalLineNo;
 
 
     /**
      * Constructor.
      *
-     * @throws \RuntimeException
-     *
      * @param CoverageLine $coverageLine
-     * @param DiffLine $diffLine
+     * @param int $originalLineNo
      */
-    public function __construct(CoverageLine $coverageLine, DiffLine $diffLine)
+    public function __construct(CoverageLine $coverageLine, $originalLineNo)
     {
-        if ($diffLine->getOperation() !== DiffLine::ADDED) {
-            throw new \RuntimeException(
-                'Cannot create ' . __CLASS__ . ' with a ' . $diffLine->getOperation() . ' diff line.'
-            );
-        }
-
         $this->coverageLine = $coverageLine;
-        $this->diffLine = $diffLine;
+        $this->originalLineNo = $originalLineNo;
     }
 
     /**
@@ -60,7 +50,7 @@ class LineAdded implements LineInterface
      */
     public function getOriginalLineNo()
     {
-        return $this->diffLine->getOriginalLineNo();
+        return $this->originalLineNo;
     }
 
     /**
@@ -68,7 +58,7 @@ class LineAdded implements LineInterface
      */
     public function getNewLineNo()
     {
-        return $this->diffLine->getNewLineNo();
+        return $this->coverageLine->getLineNo();
     }
 
     /**
@@ -76,7 +66,7 @@ class LineAdded implements LineInterface
      */
     public function getOperation()
     {
-        return DiffLine::ADDED;
+        return DiffLine::UNCHANGED;
     }
 
     /**

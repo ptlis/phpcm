@@ -13,40 +13,42 @@
 
 namespace ptlis\CoverageMonitor\Unified;
 
-use ptlis\CoverageMonitor\Coverage\CoverageLine;
 use ptlis\CoverageMonitor\Unified\Interfaces\LineInterface;
 use ptlis\DiffParser\Line as DiffLine;
 
 /**
- * Removed line.
- *
- * As removed line have no coverae data we need only the diff line to correctly present a unified representation of this
- *  line type.
+ * @todo 'Covered' is wrong term for this.
  */
-class LineRemoved implements LineInterface
+class LineNoCoverageUnchanged implements LineInterface
 {
     /**
-     * @var DiffLine
+     * @var int
      */
-    private $diffLine;
+    private $originalLineNo;
+
+    /**
+     * @var int
+     */
+    private $newLineNo;
+
+    /**
+     * @var string
+     */
+    private $content;
 
 
     /**
      * Constructor.
      *
-     * @throws \RuntimeException
-     *
-     * @param DiffLine $diffLine
+     * @param int $originalLineNo
+     * @param int $newLineNo
+     * @param string $content
      */
-    public function __construct(DiffLine $diffLine)
+    public function __construct($originalLineNo, $newLineNo, $content)
     {
-        if ($diffLine->getOperation() !== DiffLine::REMOVED) {
-            throw new \RuntimeException(
-                'Cannot create ' . __CLASS__ . ' with a ' . $diffLine->getOperation() . ' diff line.'
-            );
-        }
-
-        $this->diffLine = $diffLine;
+        $this->originalLineNo = $originalLineNo;
+        $this->newLineNo = $newLineNo;
+        $this->content = $content;
     }
 
     /**
@@ -54,7 +56,7 @@ class LineRemoved implements LineInterface
      */
     public function getOriginalLineNo()
     {
-        return $this->diffLine->getOriginalLineNo();
+        return $this->originalLineNo;
     }
 
     /**
@@ -62,7 +64,7 @@ class LineRemoved implements LineInterface
      */
     public function getNewLineNo()
     {
-        return $this->diffLine->getNewLineNo();
+        return $this->newLineNo;
     }
 
     /**
@@ -70,7 +72,7 @@ class LineRemoved implements LineInterface
      */
     public function getOperation()
     {
-        return DiffLine::REMOVED;
+        return DiffLine::UNCHANGED;
     }
 
     /**
@@ -78,7 +80,7 @@ class LineRemoved implements LineInterface
      */
     public function getContent()
     {
-        return $this->diffLine->getContent();
+        return $this->content;
     }
 
     /**

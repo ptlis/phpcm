@@ -18,34 +18,17 @@ use ptlis\CoverageMonitor\Unified\Interfaces\LineInterface;
 use ptlis\DiffParser\Line as DiffLine;
 
 /**
- * Unchanged line.
- *
- * As the line is unchanged we need only any coverage data as well as the (pre-calculated) original line number to
- *  create a unified representation of this line type.
+ * @todo 'Covered' is wrong term for this.
  */
-class LineUnchanged implements LineInterface
+class LineCoverageChanged implements LineInterface
 {
-    /**
-     * @var CoverageLine
-     */
     private $coverageLine;
+    private $diffLine;
 
-    /**
-     * @var int The original line number (not included with coverage line).
-     */
-    private $originalLineNo;
-
-
-    /**
-     * Constructor.
-     *
-     * @param CoverageLine $coverageLine
-     * @param int $originalLineNo
-     */
-    public function __construct(CoverageLine $coverageLine, $originalLineNo)
+    public function __construct(CoverageLine $coverageLine, DiffLine $diffLine)
     {
         $this->coverageLine = $coverageLine;
-        $this->originalLineNo = $originalLineNo;
+        $this->diffLine = $diffLine;
     }
 
     /**
@@ -53,7 +36,7 @@ class LineUnchanged implements LineInterface
      */
     public function getOriginalLineNo()
     {
-        return $this->originalLineNo;
+        return $this->diffLine->getOriginalLineNo();
     }
 
     /**
@@ -61,7 +44,7 @@ class LineUnchanged implements LineInterface
      */
     public function getNewLineNo()
     {
-        return $this->coverageLine->getLineNo();
+        return $this->diffLine->getNewLineNo();
     }
 
     /**
@@ -69,7 +52,7 @@ class LineUnchanged implements LineInterface
      */
     public function getOperation()
     {
-        return DiffLine::UNCHANGED;
+        return $this->diffLine->getOperation();
     }
 
     /**
