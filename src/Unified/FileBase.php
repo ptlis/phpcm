@@ -214,7 +214,7 @@ abstract class FileBase implements FileInterface
      */
     protected function getDiffLines(DiffFile $file = null)
     {
-        $lineList = [];
+        $lineList = array();
 
         if (!is_null($file)) {
             foreach ($file->getHunks() as $hunk) {
