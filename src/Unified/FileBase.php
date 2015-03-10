@@ -237,8 +237,9 @@ abstract class FileBase implements FileInterface
     protected function getOriginalLastLineNo(DiffFile $diffFile = null, array $rawLineList)
     {
         if (!is_null($diffFile)) {
+            $hunkList = $diffFile->getHunks();
             /** @var Hunk $lastHunk */
-            $lastHunk = array_pop($diffFile->getHunks());
+            $lastHunk = array_pop($hunkList);
             $lastLineNo = $lastHunk->getOriginalStart() + $lastHunk->getOriginalCount();
         } else {
             $lastLineNo = count($rawLineList);
