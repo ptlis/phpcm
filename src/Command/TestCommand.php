@@ -14,6 +14,8 @@
 namespace ptlis\CoverageMonitor\Command;
 
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
+use ptlis\CoverageMonitor\Unified\FileChanged;
+use ptlis\CoverageMonitor\Unified\FileUnchanged;
 use ptlis\ShellCommand\ShellCommandBuilder;
 use ptlis\ShellCommand\UnixEnvironment;
 use ptlis\CoverageMonitor\CommandWrapper\ComposerUpdate;
@@ -93,11 +95,15 @@ class TestCommand extends Command
 
         $output->writeln('Found ' . count($revisionList) . ' revisions.');
 
+        $count = 0;
+
+        $coverageData = array();
 
         /** @var \ptlis\Vcs\Interfaces\RevisionMetaInterface $revision */
         foreach (array_reverse($revisionList) as $revision) {
+            $count++;
 
-            $output->writeln('Revision ' . $revision->getIdentifier());
+            $output->writeln('#' . str_pad($count, strlen(count($revisionList)), ' ', STR_PAD_LEFT) . ' Revision ' . $revision->getIdentifier());
 
             $this->writeInitialOutput($output, '    Checking out');
             $vcs->checkoutRevision($revision->getIdentifier());
@@ -135,9 +141,14 @@ class TestCommand extends Command
 
             $this->writeInitialOutput($output, '    Processing Results');
 
-            $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
+            try {
+                $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
 
-            $output->write(' <command-success>Done</command-success>', true);
+                $output->write(' <command-success>Done</command-success>', true);
+            } catch (\RuntimeException $e) {
+                $output->write(' <command-error>Fail</command-error>', true);
+            }
+
 
             $changeset = $meta->getChangeset($revision);
 
@@ -145,25 +156,31 @@ class TestCommand extends Command
             echo PHP_EOL . PHP_EOL;
 
             $pairings = array();
-            foreach ($changeset->getFiles() as $changedFile) {
-                foreach ($coverage->getFiles() as $coverageFile) {
+            foreach ($coverage->getFiles() as $coverageFile) {
+                $found = false;
+                $rawFileLineList = file($coverageFile->getFullPath(), FILE_IGNORE_NEW_LINES);
+
+                foreach ($changeset->getFiles() as $changedFile) {
                     if ($changedFile->getNewFilename() === $coverageFile->getRelativePath()) {
-                        $pairings[] = array(
-                            'changed' => $changedFile,
-                            'coverage' => $coverageFile
+                        $pairings[] = new FileChanged(
+                            $coverageFile,
+                            $changedFile,
+                            $rawFileLineList
                         );
+                        $found = true;
                         break;
                     }
                 }
+
+                if (!$found) {
+                    $pairings[] = new FileUnchanged(
+                        $coverageFile,
+                        $rawFileLineList
+                    );
+                }
             }
 
-var_dump($pairings);
-//            $this->iterateDirectoryNode($output, $directory);
-
-
             $vcs->resetRevision();
-die();
-
         }
     }
 

@@ -66,21 +66,34 @@ class CoverageClover implements CoverageInterface
      * @param \SimpleXMLElement $line
      * @param string[] $fileLines
      *
-     * @return CoverageLine
+     * @return CoverageLine|null
      */
     private function readLine(\SimpleXMLElement $line, array $fileLines)
     {
         $attributes = $line->attributes();
-
         $lineNo = intval($attributes['num']);
-        $count = intval($attributes['count']);
-        $content = $fileLines[$lineNo - 1]; // Account for indexing of array = 0 when lineNo = 1
 
-        return new CoverageLine(
-            $lineNo,
-            $content,
-            $count
-        );
+        // TODO: This is a work-around for an odd issue where PHPUnit includes additional (bogus) lines
+        // Interestingly the same command executed directly at the shell doesn't appear to do this.
+        // Similarly a single execution with the proc_* functions doesn't either.
+        //
+        // Reproduction cases (use ptlis/Vcs):
+        //  - Run this on commit 6f1ed5364b1369b618270b2774f6ec86f77fa213 to see invalid trailing lines
+        //  - Run this on commit 2bbdc5d17988e54e7b42f9c125074571499a7866 to see coverage on line 0 (line numbers begin at 1)
+        $line = null;
+        if ($lineNo < count($fileLines) && $lineNo > 0) {
+
+            $count = intval($attributes['count']);
+            $content = $fileLines[$lineNo - 1]; // Account for indexing of array = 0 when lineNo = 1
+
+            $line = new CoverageLine(
+                $lineNo,
+                $content,
+                $count
+            );
+        }
+
+        return $line;
     }
 
     /**
@@ -142,7 +155,11 @@ class CoverageClover implements CoverageInterface
             /** @var \SimpleXMLElement $child */
             foreach ($file->children() as $child) {
                 if ('line' === $child->getName()) {
-                    $lineList[] = $this->readLine($child, $fileLines);
+                    $line = $this->readLine($child, $fileLines);
+
+                    if (!is_null($line)) {
+                        $lineList[] = $line;
+                    }
                 }
             }
 
