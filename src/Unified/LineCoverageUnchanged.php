@@ -84,4 +84,12 @@ class LineCoverageUnchanged implements LineInterface
     {
         return $this->coverageLine->getCount();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function shouldHaveCoverage()
+    {
+        return true;
+    }
 }

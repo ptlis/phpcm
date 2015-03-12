@@ -50,5 +50,10 @@ class LineCoverageChangedTest extends \PHPUnit_Framework_TestCase
             1,
             $line->getCoverageCount()
         );
+
+        $this->assertEquals(
+            true,
+            $line->shouldHaveCoverage()
+        );
     }
 }

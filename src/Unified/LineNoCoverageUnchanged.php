@@ -90,4 +90,12 @@ class LineNoCoverageUnchanged implements LineInterface
     {
         return 0;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function shouldHaveCoverage()
+    {
+        return false;
+    }
 }

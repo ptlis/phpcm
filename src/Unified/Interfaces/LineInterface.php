@@ -52,4 +52,11 @@ interface LineInterface
      * @return int
      */
     public function getCoverageCount();
+
+    /**
+     * Returns true if this line should be covered, false otherwise.
+     *
+     * @return bool
+     */
+    public function shouldHaveCoverage();
 }
