@@ -16,6 +16,7 @@ namespace ptlis\CoverageMonitor\Command;
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
 use ptlis\CoverageMonitor\Unified\FileChanged;
 use ptlis\CoverageMonitor\Unified\FileUnchanged;
+use ptlis\CoverageMonitor\Unified\RevisionCoverage;
 use ptlis\ShellCommand\ShellCommandBuilder;
 use ptlis\ShellCommand\UnixEnvironment;
 use ptlis\CoverageMonitor\CommandWrapper\ComposerUpdate;
@@ -144,43 +145,22 @@ class TestCommand extends Command
             try {
                 $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
 
+                $changeset = $meta->getChangeset($revision);
+
+                $revisionCoverage = new RevisionCoverage($coverage, $changeset);
+
+                $coverageData[] = $revisionCoverage;
+
                 $output->write(' <command-success>Done</command-success>', true);
+
             } catch (\RuntimeException $e) {
                 $output->write(' <command-error>Fail</command-error>', true);
             }
 
 
-            $changeset = $meta->getChangeset($revision);
-
-
-            echo PHP_EOL . PHP_EOL;
-
-            $pairings = array();
-            foreach ($coverage->getFiles() as $coverageFile) {
-                $found = false;
-                $rawFileLineList = file($coverageFile->getFullPath(), FILE_IGNORE_NEW_LINES);
-
-                foreach ($changeset->getFiles() as $changedFile) {
-                    if ($changedFile->getNewFilename() === $coverageFile->getRelativePath()) {
-                        $pairings[] = new FileChanged(
-                            $coverageFile,
-                            $changedFile,
-                            $rawFileLineList
-                        );
-                        $found = true;
-                        break;
-                    }
-                }
-
-                if (!$found) {
-                    $pairings[] = new FileUnchanged(
-                        $coverageFile,
-                        $rawFileLineList
-                    );
-                }
-            }
-
             $vcs->resetRevision();
+
+            $output->writeln('');
         }
     }
 
