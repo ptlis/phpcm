@@ -38,6 +38,11 @@ class RevisionCoverage
      */
     private $changeset;
 
+    /**
+     * @var FileInterface[]
+     */
+    private $lineList;
+
 
     /**
      * Constructor.
@@ -54,6 +59,7 @@ class RevisionCoverage
         $this->revision = $revision;
         $this->coverage = $coverage;
         $this->changeset = $changeset;
+        $this->lineList = $this->buildLines();
     }
 
     /**
@@ -63,32 +69,7 @@ class RevisionCoverage
      */
     public function getFiles()
     {
-        $mergedFileList = array();
-        foreach ($this->coverage->getFiles() as $coverageFile) {
-            $found = false;
-            $rawFileLineList = file($coverageFile->getFullPath(), FILE_IGNORE_NEW_LINES);
-
-            foreach ($this->changeset->getFiles() as $changedFile) {
-                if ($changedFile->getNewFilename() === $coverageFile->getRelativePath()) {
-                    $mergedFileList[] = new FileChanged(
-                        $coverageFile,
-                        $changedFile,
-                        $rawFileLineList
-                    );
-                    $found = true;
-                    break;
-                }
-            }
-
-            if (!$found) {
-                $mergedFileList[] = new FileUnchanged(
-                    $coverageFile,
-                    $rawFileLineList
-                );
-            }
-        }
-
-        return $mergedFileList;
+        return $this->lineList;
     }
 
     /**
@@ -129,5 +110,40 @@ class RevisionCoverage
     public function getMessage()
     {
         return $this->revision->getMessage();
+    }
+
+    /**
+     * Build the merged representation of the file lines.
+     *
+     * @return FileInterface[]
+     */
+    private function buildLines()
+    {
+        $mergedFileList = array();
+        foreach ($this->coverage->getFiles() as $coverageFile) {
+            $found = false;
+            $rawFileLineList = file($coverageFile->getFullPath(), FILE_IGNORE_NEW_LINES);
+
+            foreach ($this->changeset->getFiles() as $changedFile) {
+                if ($changedFile->getNewFilename() === $coverageFile->getRelativePath()) {
+                    $mergedFileList[] = new FileChanged(
+                        $coverageFile,
+                        $changedFile,
+                        $rawFileLineList
+                    );
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                $mergedFileList[] = new FileUnchanged(
+                    $coverageFile,
+                    $rawFileLineList
+                );
+            }
+        }
+
+        return $mergedFileList;
     }
 }

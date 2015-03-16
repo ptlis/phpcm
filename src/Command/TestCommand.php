@@ -14,7 +14,8 @@
 namespace ptlis\CoverageMonitor\Command;
 
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
-use ptlis\CoverageMonitor\Serializer\JsonSerializer;
+use ptlis\CoverageMonitor\Serializer\JsonFilesInRevisionsSerializer;
+use ptlis\CoverageMonitor\Serializer\JsonRevisionCoverageSerializer;
 use ptlis\CoverageMonitor\Unified\FileChanged;
 use ptlis\CoverageMonitor\Unified\FileUnchanged;
 use ptlis\CoverageMonitor\Unified\RevisionCoverage;
@@ -97,11 +98,28 @@ class TestCommand extends Command
 
         $output->writeln('Found ' . count($revisionList) . ' revisions.');
 
+
+        // Prepare output directory
+        $buildDirectory = __DIR__ . '/../../output';
+        if (!file_exists($buildDirectory)) {
+            mkdir($buildDirectory);
+        }
+
         $count = 0;
+        $outputFilenameList = array();
         $revisionCoverageList = array();
 
         /** @var \ptlis\Vcs\Interfaces\RevisionMetaInterface $revision */
         foreach (array_reverse($revisionList) as $revision) {
+
+            $outputFilenameList[] = array(
+                'identifier' => $revision->getIdentifier(),
+                'author' => $revision->getAuthor(),
+                'created' => $revision->getCreated()->format('c'),
+                'message' => $revision->getMessage(),
+                'filename' => $revision->getIdentifier() . '.json'
+            );
+
             $count++;
 
             $output->writeln('#' . str_pad($count, strlen(count($revisionList)), ' ', STR_PAD_LEFT) . ' Revision ' . $revision->getIdentifier());
@@ -144,16 +162,26 @@ class TestCommand extends Command
 
             try {
                 $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
-
                 $changeset = $meta->getChangeset($revision);
 
-                $revisionCoverageList[] = new RevisionCoverage($revision, $coverage, $changeset);
+                $revisionCoverage = new RevisionCoverage($revision, $coverage, $changeset);
+                $revisionCoverageList[] = $revisionCoverage;
+
+                $serializer = new JsonRevisionCoverageSerializer();
+
+                $file = new \SplFileObject($buildDirectory . '/' . $revision->getIdentifier() . '.json', 'w');
+                $file->fwrite($serializer->serialize($revisionCoverage));
+                $file->fflush();
 
                 $output->write(' <command-success>Done</command-success>', true);
+
 
             } catch (\RuntimeException $e) {
                 $output->write(' <command-error>Fail</command-error>', true);
             }
+
+
+
 
 
             $vcs->resetRevision();
@@ -161,15 +189,13 @@ class TestCommand extends Command
             $output->writeln('');
         }
 
-        $serializer = new JsonSerializer();
-
-        $buildDirectory = __DIR__ . '/../../output';
-        if (!file_exists($buildDirectory)) {
-            mkdir($buildDirectory);
-        }
-
         $file = new \SplFileObject($buildDirectory . '/revision_list.json', 'w');
-        $file->fwrite($serializer->serialize($revisionCoverageList));
+        $file->fwrite(json_encode($outputFilenameList, JSON_PRETTY_PRINT));
+        $file->fflush();
+
+        $filesInRevisionsSerializer = new JsonFilesInRevisionsSerializer();
+        $file = new \SplFileObject($buildDirectory . '/files_in_revisions.json', 'w');
+        $file->fwrite($filesInRevisionsSerializer->serialize($revisionCoverageList));
         $file->fflush();
     }
 

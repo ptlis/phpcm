@@ -19,14 +19,14 @@ use ptlis\CoverageMonitor\Unified\RevisionCoverage;
 /**
  * Interface that serializers must implement
  */
-interface SerializerInterface
+interface RevisionCoverageSerializerInterface
 {
     /**
      * Serialize the revision coverage to disk.
      *
-     * @param RevisionCoverage[] $revisionCoverageList
+     * @param RevisionCoverage $revisionCoverage
      *
      * @return string
      */
-    public function serialize(array $revisionCoverageList);
+    public function serialize(RevisionCoverage $revisionCoverage);
 }
