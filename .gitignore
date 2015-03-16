@@ -9,3 +9,4 @@
 /composer.phar
 /.idea/
 /tests/data/*/coverage.clover
+/output/

@@ -14,6 +14,7 @@
 namespace ptlis\CoverageMonitor\Command;
 
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
+use ptlis\CoverageMonitor\Serializer\JsonSerializer;
 use ptlis\CoverageMonitor\Unified\FileChanged;
 use ptlis\CoverageMonitor\Unified\FileUnchanged;
 use ptlis\CoverageMonitor\Unified\RevisionCoverage;
@@ -97,8 +98,7 @@ class TestCommand extends Command
         $output->writeln('Found ' . count($revisionList) . ' revisions.');
 
         $count = 0;
-
-        $coverageData = array();
+        $revisionCoverageList = array();
 
         /** @var \ptlis\Vcs\Interfaces\RevisionMetaInterface $revision */
         foreach (array_reverse($revisionList) as $revision) {
@@ -147,9 +147,7 @@ class TestCommand extends Command
 
                 $changeset = $meta->getChangeset($revision);
 
-                $revisionCoverage = new RevisionCoverage($coverage, $changeset);
-
-                $coverageData[] = $revisionCoverage;
+                $revisionCoverageList[] = new RevisionCoverage($revision, $coverage, $changeset);
 
                 $output->write(' <command-success>Done</command-success>', true);
 
@@ -162,6 +160,17 @@ class TestCommand extends Command
 
             $output->writeln('');
         }
+
+        $serializer = new JsonSerializer();
+
+        $buildDirectory = __DIR__ . '/../../output';
+        if (!file_exists($buildDirectory)) {
+            mkdir($buildDirectory);
+        }
+
+        $file = new \SplFileObject($buildDirectory . '/revision_list.json', 'w');
+        $file->fwrite($serializer->serialize($revisionCoverageList));
+        $file->fflush();
     }
 
     private function writeInitialOutput(OutputInterface $output, $text)

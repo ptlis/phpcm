@@ -16,12 +16,18 @@ namespace ptlis\CoverageMonitor\Unified;
 use ptlis\CoverageMonitor\Coverage\Interfaces\CoverageInterface;
 use ptlis\CoverageMonitor\Unified\Interfaces\FileInterface;
 use ptlis\DiffParser\Changeset;
+use ptlis\Vcs\Shared\RevisionMeta;
 
 /**
  * Contains the coverage and changeset data for a single VCS revision.
  */
 class RevisionCoverage
 {
+    /**
+     * @var RevisionMeta
+     */
+    private $revision;
+
     /**
      * @var CoverageInterface
      */
@@ -36,13 +42,16 @@ class RevisionCoverage
     /**
      * Constructor.
      *
+     * @param RevisionMeta $revision
      * @param CoverageInterface $coverage
      * @param Changeset $changeset
      */
     public function __construct(
+        RevisionMeta $revision,
         CoverageInterface $coverage,
         Changeset $changeset
     ) {
+        $this->revision = $revision;
         $this->coverage = $coverage;
         $this->changeset = $changeset;
     }
@@ -80,5 +89,45 @@ class RevisionCoverage
         }
 
         return $mergedFileList;
+    }
+
+    /**
+     * Get the revision identifier.
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->revision->getIdentifier();
+    }
+
+    /**
+     * Get the author of this commit.
+     *
+     * @return string
+     */
+    public function getAuthor()
+    {
+        return $this->revision->getAuthor();
+    }
+
+    /**
+     * Get the created date/time.
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->revision->getCreated();
+    }
+
+    /**
+     * Get the commit message.
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->revision->getMessage();
     }
 }
