@@ -1,0 +1,58 @@
+
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>New Filename:</th>
+                <td>{{ file.new_filename }}</td>
+            </tr>
+            <tr>
+                <th>Original Filename:</th>
+                <td>{{ file.original_filename }}</td>
+            </tr>
+            <tr>
+                <th>Operation:</th>
+                <td>{{ file.operation }}</td>
+            </tr>
+            <tr>
+                <th>In Other Revisions:</th>
+                <td>
+                    <select ng-model="otherRevision.selected" ng-options="revision.short_identifier for revision in fileInRevisions track by revision.identifier" ng-change="revisionChanged()"></select>
+                    (<a ui-sref="history_file({new_filename: file.new_filename})">history</a>)
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <div ng-include="'partials/revision_meta.html'"></div>
+    </div>
+</div>
+
+<table class="table table-hover code-table table-bordered">
+    <tbody>
+        <tr ng-repeat="line in file.lines" ng-class="{
+                'code-covered': line.should_have_coverage && line.coverage_count > 0,
+                'code-not-covered': line.should_have_coverage && line.coverage_count == 0,
+                'code-added': line.operation == 'added',
+                'code-removed': line.operation == 'removed'
+        }">
+            <td class="code-original-line-no">
+                <span ng-if="-1 != line.original_line_number">{{ line.original_line_number }}</span>
+                <span ng-if="-1 == line.original_line_number">-</span>
+            </td>
+            <td class="code-new-line-no">
+                <span ng-if="-1 != line.new_line_number">{{ line.new_line_number }}</span>
+                <span ng-if="-1 == line.new_line_number">-</span>
+            </td>
+            <td class="code-line-content"><code>{{ line.content }}</code></td>
+            <td class="code-coverage-annotation">
+                <span class="glyphicon glyphicon-minus-sign" aria-hidden="true" ng-if="!line.should_have_coverage || (line.should_have_coverage && line.operation == 'unchanged')"></span>
+                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" ng-if="line.should_have_coverage && line.coverage_count == 0 && line.operation == 'added'"></span>
+                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" ng-if="line.should_have_coverage && line.coverage_count > 0 && line.operation == 'added'"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>

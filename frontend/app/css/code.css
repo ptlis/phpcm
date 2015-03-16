@@ -1,0 +1,66 @@
+
+
+body {
+    overflow-y: scroll;
+}
+
+footer {
+    margin: 30px auto 0 auto;
+    padding: 10px 0 10px 0;
+    border-top: 1px solid #bbb;
+    text-align: center;
+    font-size: 0.8em;
+    color: #666;
+    width: 50%;
+}
+
+
+.code-table td {
+    padding: 0 8px !important;
+}
+
+.code-table code {
+    background-color: transparent;
+    color: #333;
+    white-space: pre;
+}
+
+.code-new-line-no, .code-original-line-no {
+    text-align: right;
+}
+
+.code-table .code-added .code-new-line-no {
+    background-color: #8DC68E;
+}
+
+.code-table .code-removed .code-original-line-no {
+    background-color: #DD8080;
+}
+
+.code-table .code-covered .code-line-content {
+    background-color: #BEE0C3;
+}
+
+.code-table .code-not-covered .code-line-content {
+    background-color: #DB9D9D;
+}
+
+.code-table .code-removed .code-line-content code {
+    color: #999;
+}
+
+/* Icon for no change on this line. */
+.code-table .code-coverage-annotation {
+    color: #fff;
+    background-color: #eee;
+}
+
+/* Icon for newly added, covered code. */
+.code-table .code-added.code-covered .code-coverage-annotation {
+    background-color: #8DC68E;
+}
+
+/* Icon for newly added, uncovered code. */
+.code-table .code-added.code-not-covered .code-coverage-annotation {
+    background-color: #DD8080;
+}

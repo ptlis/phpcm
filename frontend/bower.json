@@ -1,0 +1,16 @@
+{
+  "name": "phpcm",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ptlis/phpcm",
+  "description": "Frontend for PHP Coverage Monitor",
+  "authors": [
+    "brian ridley <ptlis@ptlis.net>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angularjs": "~1.3",
+    "angular-ui-router": "~0.2",
+    "angular-moment": "~0.9"
+  }
+}

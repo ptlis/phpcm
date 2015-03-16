@@ -9,4 +9,6 @@
 /composer.phar
 /.idea/
 /tests/data/*/coverage.clover
+/frontend/output/
+/frontend/app/bower_components/
 /output/

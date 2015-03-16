@@ -1,0 +1,25 @@
+
+<div class="row">
+    <div class="col-md-6">
+        <div ng-include="'partials/revision_meta.html'"></div>
+    </div>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Filename:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="file in revision.files">
+            <td>
+                <a ui-sref="revision_file({identifier: revision.identifier, new_filename: file.new_filename})">
+                    {{ file.new_filename }}
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

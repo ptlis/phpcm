@@ -1,0 +1,20 @@
+
+<table ng-if="revisionList.length" class="table">
+    <thead>
+        <tr>
+            <th>Revision Id:</th>
+            <th>Created:</th>
+            <th>Author:</th>
+            <th>Commit Message:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="revision in revisionList">
+            <td><code><a ui-sref="revision_single({'identifier': revision.identifier})">{{ revision.short_identifier }}</a></code></td>
+            <td>{{ revision.created | amDateFormat:'DD/MM/YYYY h:mma' }}</td>
+            <td>{{ revision.author }}</td>
+            <td>{{ revision.message }}</td>
+        </tr>
+    </tbody>
+</table>
+

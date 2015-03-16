@@ -1,0 +1,21 @@
+
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Revision:</th>
+            <td><code><a ui-sref="revision_single({'identifier': revision.identifier})">{{ revision.identifier }}</a></code></td>
+        </tr>
+        <tr>
+            <th>Created:</th>
+            <td>{{ revision.created | amDateFormat:'DD/MM/YYYY h:mma' }}</td>
+        </tr>
+        <tr>
+            <th>Author:</th>
+            <td>{{ revision.author }}</td>
+        </tr>
+        <tr>
+            <th>Message:</th>
+            <td>{{ revision.message }}</td>
+        </tr>
+    </tbody>
+</table>
