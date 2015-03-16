@@ -23,7 +23,7 @@
 
 
 
-<table class="table">
+<table class="table file-history">
     <thead>
         <tr>
             <th>Revision:</th>
@@ -31,15 +31,19 @@
             <th>Created:</th>
             <th>Author:</th>
             <th>Commit Message:</th>
+            <th>New Covered Lines:</th>
+            <th>New Uncovered Lines:</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="file in filteredFiles = (fileInRevisions | filter: filterByOperation)">
+        <tr ng-repeat="file in filteredFiles = (fileInRevisions | filter: filterByOperation)" ng-class="{'lines-covered': 0 == file.metrics.new_line_uncovered && file.metrics.new_line_covered > 0, 'lines-uncovered': 0 != file.metrics.new_line_uncovered}">
             <td><code><a ui-sref="revision_file({identifier: file.identifier, new_filename: filename})">{{ file.short_identifier }}</a></code></td>
             <td>{{ file.operation }}</td>
             <td>{{ file.created | amDateFormat:'DD/MM/YYYY h:mma' }}</td>
             <td>{{ file.author }}</td>
             <td>{{ file.message }}</td>
+            <td>{{ file.metrics.new_line_covered }}</td>
+            <td>{{ file.metrics.new_line_uncovered }}</td>
         </tr>
     </tbody>
 </table>

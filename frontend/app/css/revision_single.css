@@ -1,0 +1,7 @@
+.revision-file-list .lines-covered {
+    background-color: #C9DDCC;
+}
+
+.revision-file-list .lines-uncovered {
+    background-color: #D8B1B1;
+}

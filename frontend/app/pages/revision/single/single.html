@@ -6,19 +6,25 @@
 </div>
 
 
-<table class="table">
+<table class="table revision-file-list">
     <thead>
         <tr>
             <th>Filename:</th>
+            <th>Operation:</th>
+            <th>New Covered Lines:</th>
+            <th>New Uncovered Lines:</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="file in revision.files">
+        <tr ng-repeat="file in revision.files" ng-class="{'lines-covered': 0 == file.metrics.new_line_uncovered && file.metrics.new_line_covered > 0, 'lines-uncovered': 0 != file.metrics.new_line_uncovered}">
             <td>
                 <a ui-sref="revision_file({identifier: revision.identifier, new_filename: file.new_filename})">
                     {{ file.new_filename }}
                 </a>
             </td>
+            <td>{{ file.operation }}</td>
+            <td>{{ file.metrics.new_line_covered }}</td>
+            <td>{{ file.metrics.new_line_uncovered }}</td>
         </tr>
     </tbody>
 </table>

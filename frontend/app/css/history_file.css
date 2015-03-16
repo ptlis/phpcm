@@ -1,0 +1,7 @@
+.file-history .lines-covered {
+    background-color: #C9DDCC;
+}
+
+.file-history .lines-uncovered {
+    background-color: #D8B1B1;
+}
