@@ -28,6 +28,7 @@ class JsonRevisionCoverageSerializer implements RevisionCoverageSerializerInterf
     {
         $revisionData = array(
             'identifier' => $revisionCoverage->getIdentifier(),
+            'short_identifier' => substr($revisionCoverage->getIdentifier(), 0, 10),
             'author' => $revisionCoverage->getAuthor(),
             'created' => $revisionCoverage->getCreated()->format('c'),
             'message' => $revisionCoverage->getMessage(),

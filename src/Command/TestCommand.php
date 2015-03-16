@@ -114,6 +114,7 @@ class TestCommand extends Command
 
             $outputFilenameList[] = array(
                 'identifier' => $revision->getIdentifier(),
+                'short_identifier' => substr($revision->getIdentifier(), 0, 10),
                 'author' => $revision->getAuthor(),
                 'created' => $revision->getCreated()->format('c'),
                 'message' => $revision->getMessage(),

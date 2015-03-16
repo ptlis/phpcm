@@ -35,10 +35,17 @@ class JsonFilesInRevisionsSerializer implements FilesInRevisionsSerializerInterf
         foreach ($revisionCoverageList as $revisionCoverage) {
             foreach ($revisionCoverage->getFiles() as $file) {
                 if (!array_key_exists($file->getNewFilename(), $fileList)) {
-                    $fileList[$file->getNewFilename()] = [];
+                    $fileList[$file->getNewFilename()] = array();
                 }
 
-                $fileList[$file->getNewFilename()][] = $revisionCoverage->getIdentifier();
+                $fileList[$file->getNewFilename()][] = array(
+                    'identifier' => $revisionCoverage->getIdentifier(),
+                    'short_identifier' => substr($revisionCoverage->getIdentifier(), 0, 10),
+                    'author' => $revisionCoverage->getAuthor(),
+                    'created' => $revisionCoverage->getCreated()->format('c'),
+                    'message' => $revisionCoverage->getMessage(),
+                    'operation' => $file->getOperation()
+                );
             }
         }
 

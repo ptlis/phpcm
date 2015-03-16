@@ -83,14 +83,21 @@ class CoverageClover implements CoverageInterface
         $line = null;
         if ($lineNo < count($fileLines) && $lineNo > 0) {
 
+
             $count = intval($attributes['count']);
             $content = $fileLines[$lineNo - 1]; // Account for indexing of array = 0 when lineNo = 1
 
-            $line = new CoverageLine(
-                $lineNo,
-                $content,
-                $count
-            );
+            // TODO: Handle methods differently
+            if ('stmt' === strval($attributes['type'])) {
+                $line = new CoverageLine(
+                    $lineNo,
+                    $content,
+                    $count
+                );
+
+            } elseif ('method' === strval($attributes['type'])) {
+
+            }
         }
 
         return $line;
