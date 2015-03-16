@@ -11,7 +11,7 @@
                 $stateProvider.state(
                     'home', {
                         url: '/',
-                        templateUrl: 'pages/revision_list/list.html',
+                        templateUrl: 'pages/revision/list/list.html',
                         controller: 'ListCtrl'
                     }
                 );

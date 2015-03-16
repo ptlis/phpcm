@@ -11,7 +11,7 @@
                 $stateProvider.state(
                     'revision_file', {
                         url: '/revision/{identifier}/{new_filename}',
-                        templateUrl: 'pages/revision_file/file.html',
+                        templateUrl: 'pages/revision/file/file.html',
                         controller: 'RevisionFileCtrl'
                     }
                 );

@@ -11,7 +11,7 @@
                 $stateProvider.state(
                     'revision_single', {
                         url: '/revision/{identifier}',
-                        templateUrl: 'pages/revision_single/single.html',
+                        templateUrl: 'pages/revision/single/single.html',
                         controller: 'SingleRevisionCtrl'
                     }
                 );
