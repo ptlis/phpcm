@@ -53,13 +53,17 @@ abstract class FileBase implements FileInterface
             $diffLine = $this->getMatchingDiffLine($diffLineList, $originalLineNo, $newLineNo);
             $coverageLine = $this->getMatchingCoverageLine($coverageLineList, $diffLine, $newLineNo);
 
-            $unifiedLineList[] = $this->buildFromLines(
+            $line = $this->buildFromLines(
                 $coverageLine,
                 $diffLine,
                 $rawLineList,
                 $originalLineNo,
                 $newLineNo
             );
+
+            if (!is_null($line)) {
+                $unifiedLineList[] = $line;
+            }
 
             // Conditionally change line numbers depending on line operation.
             if (!is_null($diffLine)) {
@@ -175,7 +179,7 @@ abstract class FileBase implements FileInterface
      * @param int $originalLineNo
      * @param int $newLineNo
      *
-     * @return LineCoverageUnchanged|LineNoCoverageUnchanged
+     * @return LineInterface|null
      */
     protected function buildFromLines(
         CoverageLine $coverageLine = null,
@@ -184,6 +188,7 @@ abstract class FileBase implements FileInterface
         $originalLineNo,
         $newLineNo
     ) {
+        $unifiedLine = null;
 
         // Coverage line only
         if (!is_null($coverageLine) && is_null($diffLine)) {
@@ -197,8 +202,8 @@ abstract class FileBase implements FileInterface
         } elseif (!is_null($coverageLine) && !is_null($diffLine)) {
             $unifiedLine = new LineCoverageChanged($coverageLine, $diffLine);
 
-        // Neither line
-        } else {
+        // Neither line, TODO: Why do we need the additional check?
+        } elseif ($newLineNo - 1 < count($rawLineList)) {
             $unifiedLine = new LineNoCoverageUnchanged($originalLineNo, $newLineNo, $rawLineList[$newLineNo - 1]);
         }
 
