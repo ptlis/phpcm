@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "ptlis/diff-parser",
-            "version": "v0.3.0",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ptlis/diff-parser.git",
-                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2"
+                "reference": "5909f375191cdb3e046b949de1cead818e9c4cd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ptlis/diff-parser/zipball/d98f11ca2047530a8d2f19950fa6f759bae16fe2",
-                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2",
+                "url": "https://api.github.com/repos/ptlis/diff-parser/zipball/5909f375191cdb3e046b949de1cead818e9c4cd3",
+                "reference": "5909f375191cdb3e046b949de1cead818e9c4cd3",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "parser",
                 "unified-diff"
             ],
-            "time": "2015-03-03 22:43:36"
+            "time": "2015-03-16 21:06:57"
         },
         {
             "name": "ptlis/shell-command",
