@@ -4,8 +4,280 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "00ec87feffe5b8940d30942bfef680d3",
+    "hash": "93281ec91135221f77d9160c31d52e53",
     "packages": [
+        {
+            "name": "ptlis/diff-parser",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ptlis/diff-parser.git",
+                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ptlis/diff-parser/zipball/d98f11ca2047530a8d2f19950fa6f759bae16fe2",
+                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "pdepend/pdepend": "~1.1",
+                "phploc/phploc": "~2.0",
+                "phpmd/phpmd": "@dev",
+                "phpunit/phpunit": "~4.0",
+                "sebastian/phpcpd": "~2.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ptlis\\DiffParser\\": "src/",
+                    "ptlis\\DiffParser\\Test\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "brian ridley",
+                    "email": "ptlis@ptlis.net"
+                }
+            ],
+            "description": "A parser for unified diff files, returning a hydrated object graph.",
+            "keywords": [
+                "diff",
+                "parser",
+                "unified-diff"
+            ],
+            "time": "2015-03-03 22:43:36"
+        },
+        {
+            "name": "ptlis/shell-command",
+            "version": "v0.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ptlis/shell-command.git",
+                "reference": "1664df92be5811e4c925546fb14b0af5129b9133"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ptlis/shell-command/zipball/1664df92be5811e4c925546fb14b0af5129b9133",
+                "reference": "1664df92be5811e4c925546fb14b0af5129b9133",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "pdepend/pdepend": "~1.1",
+                "phploc/phploc": "~2.0",
+                "phpmd/phpmd": "@dev",
+                "phpunit/phpunit": "~4.0",
+                "psr/log": "1.0.0",
+                "sebastian/phpcpd": "~2.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ptlis\\ShellCommand\\": "src/",
+                    "ptlis\\ShellCommand\\Test\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "brian ridley",
+                    "email": "ptlis@ptlis.net"
+                }
+            ],
+            "description": "A basic wrapper around execution of shell commands.",
+            "keywords": [
+                "command",
+                "exec",
+                "execute",
+                "process",
+                "run",
+                "shell"
+            ],
+            "time": "2015-03-15 20:06:03"
+        },
+        {
+            "name": "ptlis/vcs",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ptlis/vcs.git",
+                "reference": "9feb687d8bd283ef8b38972d5ca6d6908b6f7341"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ptlis/vcs/zipball/9feb687d8bd283ef8b38972d5ca6d6908b6f7341",
+                "reference": "9feb687d8bd283ef8b38972d5ca6d6908b6f7341",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "ptlis/diff-parser": "~0.3",
+                "ptlis/shell-command": "~0.7"
+            },
+            "require-dev": {
+                "pdepend/pdepend": "~1.1",
+                "phploc/phploc": "~2.0",
+                "phpmd/phpmd": "@dev",
+                "phpunit/phpunit": "~4.0",
+                "sebastian/phpcpd": "~2.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ptlis\\Vcs\\": "src/",
+                    "ptlis\\Vcs\\Test\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "brian ridley",
+                    "email": "ptlis@ptlis.net"
+                }
+            ],
+            "description": "Tools for working with version control systems.",
+            "keywords": [
+                "vcs",
+                "version",
+                "version control"
+            ],
+            "time": "2015-03-12 21:20:47"
+        },
+        {
+            "name": "symfony/console",
+            "version": "v2.6.4",
+            "target-dir": "Symfony/Component/Console",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Console.git",
+                "reference": "e44154bfe3e41e8267d7a3794cd9da9a51cfac34"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/e44154bfe3e41e8267d7a3794cd9da9a51cfac34",
+                "reference": "e44154bfe3e41e8267d7a3794cd9da9a51cfac34",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/event-dispatcher": "~2.1",
+                "symfony/process": "~2.1"
+            },
+            "suggest": {
+                "psr/log": "For using the console logger",
+                "symfony/event-dispatcher": "",
+                "symfony/process": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Console\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "http://symfony.com",
+            "time": "2015-01-25 04:39:26"
+        },
+        {
+            "name": "symfony/var-dumper",
+            "version": "v2.6.4",
+            "target-dir": "Symfony/Component/VarDumper",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "c3d5a36c3e3298bd8b070488fba5537174647353"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/c3d5a36c3e3298bd8b070488fba5537174647353",
+                "reference": "c3d5a36c3e3298bd8b070488fba5537174647353",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-symfony_debug": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/dump.php"
+                ],
+                "psr-0": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                }
+            ],
+            "description": "Symfony mechanism for exploring and dumping PHP variables",
+            "homepage": "http://symfony.com",
+            "keywords": [
+                "debug",
+                "dump"
+            ],
+            "time": "2015-02-02 16:32:08"
+        }
+    ],
+    "packages-dev": [
         {
             "name": "doctrine/instantiator",
             "version": "1.0.4",
@@ -540,161 +812,6 @@
             "time": "2014-10-03 05:12:11"
         },
         {
-            "name": "ptlis/diff-parser",
-            "version": "v0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ptlis/diff-parser.git",
-                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ptlis/diff-parser/zipball/d98f11ca2047530a8d2f19950fa6f759bae16fe2",
-                "reference": "d98f11ca2047530a8d2f19950fa6f759bae16fe2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "pdepend/pdepend": "~1.1",
-                "phploc/phploc": "~2.0",
-                "phpmd/phpmd": "@dev",
-                "phpunit/phpunit": "~4.0",
-                "sebastian/phpcpd": "~2.0",
-                "squizlabs/php_codesniffer": "~1.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ptlis\\DiffParser\\": "src/",
-                    "ptlis\\DiffParser\\Test\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "brian ridley",
-                    "email": "ptlis@ptlis.net"
-                }
-            ],
-            "description": "A parser for unified diff files, returning a hydrated object graph.",
-            "keywords": [
-                "diff",
-                "parser",
-                "unified-diff"
-            ],
-            "time": "2015-03-03 22:43:36"
-        },
-        {
-            "name": "ptlis/shell-command",
-            "version": "v0.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ptlis/shell-command.git",
-                "reference": "c78957d9af160c3e82498aa94c5f9e3a794bc1a5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ptlis/shell-command/zipball/c78957d9af160c3e82498aa94c5f9e3a794bc1a5",
-                "reference": "c78957d9af160c3e82498aa94c5f9e3a794bc1a5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "pdepend/pdepend": "~1.1",
-                "phploc/phploc": "~2.0",
-                "phpmd/phpmd": "@dev",
-                "phpunit/phpunit": "~4.0",
-                "sebastian/phpcpd": "~2.0",
-                "squizlabs/php_codesniffer": "~1.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ptlis\\ShellCommand\\": "src/",
-                    "ptlis\\ShellCommand\\Test\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "brian ridley",
-                    "email": "ptlis@ptlis.net"
-                }
-            ],
-            "description": "A basic wrapper around execution of shell commands.",
-            "keywords": [
-                "command",
-                "exec",
-                "execute",
-                "process",
-                "run",
-                "shell"
-            ],
-            "time": "2015-03-02 22:56:20"
-        },
-        {
-            "name": "ptlis/vcs",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ptlis/vcs.git",
-                "reference": "3c6efc28e9722a27210126fb6a8149b5e8982352"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ptlis/vcs/zipball/3c6efc28e9722a27210126fb6a8149b5e8982352",
-                "reference": "3c6efc28e9722a27210126fb6a8149b5e8982352",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "ptlis/diff-parser": "~0.3",
-                "ptlis/shell-command": "~0.6"
-            },
-            "require-dev": {
-                "pdepend/pdepend": "~1.1",
-                "phploc/phploc": "~2.0",
-                "phpmd/phpmd": "@dev",
-                "phpunit/phpunit": "~4.0",
-                "sebastian/phpcpd": "~2.0",
-                "squizlabs/php_codesniffer": "~1.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ptlis\\Vcs\\": "src/",
-                    "ptlis\\Vcs\\Test\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "brian ridley",
-                    "email": "ptlis@ptlis.net"
-                }
-            ],
-            "description": "Tools for working with version control systems.",
-            "keywords": [
-                "vcs",
-                "version",
-                "version control"
-            ],
-            "time": "2015-03-03 22:46:08"
-        },
-        {
             "name": "sebastian/comparator",
             "version": "1.1.1",
             "source": {
@@ -1066,120 +1183,6 @@
             "time": "2014-12-15 14:25:24"
         },
         {
-            "name": "symfony/console",
-            "version": "v2.6.4",
-            "target-dir": "Symfony/Component/Console",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Console.git",
-                "reference": "e44154bfe3e41e8267d7a3794cd9da9a51cfac34"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/e44154bfe3e41e8267d7a3794cd9da9a51cfac34",
-                "reference": "e44154bfe3e41e8267d7a3794cd9da9a51cfac34",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.1",
-                "symfony/process": "~2.1"
-            },
-            "suggest": {
-                "psr/log": "For using the console logger",
-                "symfony/event-dispatcher": "",
-                "symfony/process": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Console\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Symfony Console Component",
-            "homepage": "http://symfony.com",
-            "time": "2015-01-25 04:39:26"
-        },
-        {
-            "name": "symfony/var-dumper",
-            "version": "v2.6.4",
-            "target-dir": "Symfony/Component/VarDumper",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "c3d5a36c3e3298bd8b070488fba5537174647353"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/c3d5a36c3e3298bd8b070488fba5537174647353",
-                "reference": "c3d5a36c3e3298bd8b070488fba5537174647353",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "suggest": {
-                "ext-symfony_debug": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "Resources/functions/dump.php"
-                ],
-                "psr-0": {
-                    "Symfony\\Component\\VarDumper\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                }
-            ],
-            "description": "Symfony mechanism for exploring and dumping PHP variables",
-            "homepage": "http://symfony.com",
-            "keywords": [
-                "debug",
-                "dump"
-            ],
-            "time": "2015-02-02 16:32:08"
-        },
-        {
             "name": "symfony/yaml",
             "version": "v2.6.4",
             "target-dir": "Symfony/Component/Yaml",
@@ -1227,7 +1230,6 @@
             "time": "2015-01-25 04:39:26"
         }
     ],
-    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
