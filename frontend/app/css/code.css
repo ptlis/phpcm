@@ -19,48 +19,68 @@ footer {
     padding: 0 8px !important;
 }
 
-.code-table code {
-    background-color: transparent;
-    color: #333;
-    white-space: pre;
-}
+/* Code Table */
 
-.code-new-line-no, .code-original-line-no {
-    text-align: right;
-}
+    .code-table code {
+        background-color: transparent;
+        color: #333;
+        white-space: pre;
+    }
 
-.code-table .code-added .code-new-line-no {
-    background-color: #8DC68E;
-}
+    .code-new-line-no, .code-original-line-no {
+        text-align: right;
+    }
 
-.code-table .code-removed .code-original-line-no {
-    background-color: #DD8080;
-}
+    /* Added line, highlight new line no. */
+    .code-table .code-added .code-new-line-no {
+        background-color: #8DC68E;
+    }
 
-.code-table .code-covered .code-line-content {
-    background-color: #BEE0C3;
-}
+    /* Removed line, highlight original line no. */
+    .code-table .code-removed .code-original-line-no {
+        background-color: #DD8080;
+    }
 
-.code-table .code-not-covered .code-line-content {
-    background-color: #DB9D9D;
-}
+    /* Highlight covered line. */
+    .code-table .code-covered .code-line-content {
+        background-color: #C9DDCC;
+    }
 
-.code-table .code-removed .code-line-content code {
-    color: #999;
-}
+    /* Tint covered colour darker on hover. */
+    .code-table tr.code-covered:hover .code-line-content {
+        background-color: #AADDB1;
+    }
 
-/* Icon for no change on this line. */
-.code-table .code-coverage-annotation {
-    color: #fff;
-    background-color: #eee;
-}
+    /* Highlight uncovered line. */
+    .code-table .code-not-covered .code-line-content {
+        background-color: #D8B1B1;
+    }
 
-/* Icon for newly added, covered code. */
-.code-table .code-added.code-covered .code-coverage-annotation {
-    background-color: #8DC68E;
-}
+    /* Tint uncovered colour darker on hover. */
+    .code-table tr.code-not-covered:hover .code-line-content {
+        background-color: #DB9D9D;
+    }
 
-/* Icon for newly added, uncovered code. */
-.code-table .code-added.code-not-covered .code-coverage-annotation {
-    background-color: #DD8080;
-}
+    /* Deleted content. */
+    .code-table .code-removed .code-line-content code {
+        color: #999;
+    }
+
+/* Icons */
+
+
+    /* Icon for no change on this line. */
+    .code-table .code-coverage-annotation {
+        color: #fff;
+        background-color: #eee;
+    }
+
+    /* Icon for newly added, covered code. */
+    .code-table .code-added.code-covered .code-coverage-annotation {
+        background-color: #8DC68E;
+    }
+
+    /* Icon for newly added, uncovered code. */
+    .code-table .code-added.code-not-covered .code-coverage-annotation {
+        background-color: #DD8080;
+    }
