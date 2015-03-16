@@ -40,6 +40,7 @@ class JsonRevisionCoverageSerializer implements RevisionCoverageSerializerInterf
                 'original_filename' => $file->getOriginalFilename(),
                 'new_filename' => $file->getNewFilename(),
                 'operation' => $file->getOperation(),
+                'metrics' => $file->getMetrics(),
                 'lines' => array()
             );
 

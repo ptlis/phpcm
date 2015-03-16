@@ -27,13 +27,16 @@ use ptlis\DiffParser\Line as DiffLine;
 abstract class FileBase implements FileInterface
 {
     /**
+     * @var LineInterface[] array of coverage lines for this file.
+     */
+    protected $lineList;
+
+    /**
      * Internal method to build a unified list of lines.
      *
      * @param CoverageFile $coverageFile
      * @param string[] $rawLineList
      * @param DiffFile|null $diffFile
-     *
-     * @return LineInterface
      */
     protected function internalGetLines(CoverageFile $coverageFile, array $rawLineList, DiffFile $diffFile = null)
     {
@@ -83,7 +86,7 @@ abstract class FileBase implements FileInterface
             $newLineNo++;
         }
 
-        return $unifiedLineList;
+        $this->lineList = $unifiedLineList;
     }
 
     /**
@@ -251,5 +254,31 @@ abstract class FileBase implements FileInterface
         }
 
         return $lastLineNo;
+    }
+
+    /**
+     * Get coverage metrics about this file.
+     *
+     * @return array
+     */
+    public function getMetrics()
+    {
+        $metrics = array(
+            'new_line_covered' => 0,
+            'new_line_uncovered' => 0
+        );
+
+        foreach ($this->lineList as $line) {
+
+            if ($line->getOperation() == DiffLine::ADDED && $line->shouldHaveCoverage()) {
+                if ($line->getCoverageCount() > 0) {
+                    $metrics['new_line_covered']++;
+                } else {
+                    $metrics['new_line_uncovered']++;
+                }
+            }
+        }
+
+        return $metrics;
     }
 }

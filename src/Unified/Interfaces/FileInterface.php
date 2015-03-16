@@ -48,4 +48,11 @@ interface FileInterface
      * @return LineInterface[]
      */
     public function getLines();
+
+    /**
+     * Get coverage metrics about the file.
+     *
+     * @return array
+     */
+    public function getMetrics();
 }

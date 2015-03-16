@@ -40,6 +40,7 @@ class FileUnchanged extends FileBase implements FileInterface
     {
         $this->coverageFile = $coverageFile;
         $this->fileLineList = $fileLineList;
+        $this->internalGetLines($this->coverageFile, $this->fileLineList);
     }
 
     /**
@@ -71,6 +72,6 @@ class FileUnchanged extends FileBase implements FileInterface
      */
     public function getLines()
     {
-        return $this->internalGetLines($this->coverageFile, $this->fileLineList);
+        return $this->lineList;
     }
 }

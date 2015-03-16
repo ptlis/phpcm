@@ -44,7 +44,8 @@ class JsonFilesInRevisionsSerializer implements FilesInRevisionsSerializerInterf
                     'author' => $revisionCoverage->getAuthor(),
                     'created' => $revisionCoverage->getCreated()->format('c'),
                     'message' => $revisionCoverage->getMessage(),
-                    'operation' => $file->getOperation()
+                    'operation' => $file->getOperation(),
+                    'metrics' => $file->getMetrics()
                 );
             }
         }

@@ -47,6 +47,7 @@ class FileChanged extends FileBase implements FileInterface
         $this->coverageFile = $coverageFile;
         $this->diffFile = $diffFile;
         $this->fileLineList = $fileLineList;
+        $this->internalGetLines($this->coverageFile, $this->fileLineList, $this->diffFile);
     }
 
     /**
@@ -82,6 +83,6 @@ class FileChanged extends FileBase implements FileInterface
      */
     public function getLines()
     {
-        return $this->internalGetLines($this->coverageFile, $this->fileLineList, $this->diffFile);
+        return $this->lineList;
     }
 }
