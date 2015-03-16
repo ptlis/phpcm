@@ -50,6 +50,24 @@
             })
             .success(function(data) {
                 if (name in data && data.hasOwnProperty(name)) {
+
+                    // sort commits with most recent ones first.
+                    data[name].sort(function(a, b) {
+                        var dateA = moment(a.created);
+                        var dateB = moment(b.created);
+
+                        if (dateA.isBefore(dateB)) {
+                            return 1;
+
+                        } else if (dateB.isBefore(dateA)) {
+                            return -1;
+
+                        } else {
+                            return 0;
+                        }
+                    });
+
+
                     successCallback(data[name]);
                 } else {
                     successCallback([]);
