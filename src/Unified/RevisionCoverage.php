@@ -39,6 +39,11 @@ class RevisionCoverage
     private $changeset;
 
     /**
+     * @var RawFileList
+     */
+    private $rawFileList;
+
+    /**
      * @var FileInterface[]
      */
     private $lineList;
@@ -50,15 +55,18 @@ class RevisionCoverage
      * @param RevisionMeta $revision
      * @param CoverageInterface $coverage
      * @param Changeset $changeset
+     * @param RawFileList $rawFileList
      */
     public function __construct(
         RevisionMeta $revision,
         CoverageInterface $coverage,
-        Changeset $changeset
+        Changeset $changeset,
+        RawFileList $rawFileList
     ) {
         $this->revision = $revision;
         $this->coverage = $coverage;
         $this->changeset = $changeset;
+        $this->rawFileList = $rawFileList;
         $this->lineList = $this->buildLines();
     }
 
@@ -119,27 +127,57 @@ class RevisionCoverage
      */
     private function buildLines()
     {
-        $mergedFileList = array();
+        $coverageFileList = array();
         foreach ($this->coverage->getFiles() as $coverageFile) {
-            $found = false;
-            $rawFileLineList = file($coverageFile->getFullPath(), FILE_IGNORE_NEW_LINES);
+            $coverageFileList[$coverageFile->getRelativePath()] = $coverageFile;
+        }
 
-            foreach ($this->changeset->getFiles() as $changedFile) {
-                if ($changedFile->getNewFilename() === $coverageFile->getRelativePath()) {
-                    $mergedFileList[] = new FileChanged(
-                        $coverageFile,
-                        $changedFile,
-                        $rawFileLineList
-                    );
-                    $found = true;
-                    break;
-                }
+        $changedFileList = array();
+        foreach ($this->changeset->getFiles() as $changedFile) {
+            $changedFileList[$changedFile->getNewFilename()] = $changedFile;
+        }
+
+        $mergedFileList = array();
+        foreach ($this->rawFileList->getFiles() as $name => $fileLines) {
+            $coverageFile = null;
+            $changedFile = null;
+            $rawLineList = $this->rawFileList->getFile($name);
+
+            if (array_key_exists($name, $coverageFileList)) {
+                $coverageFile = $coverageFileList[$name];
             }
 
-            if (!$found) {
-                $mergedFileList[] = new FileUnchanged(
+            if (array_key_exists($name, $changedFileList)) {
+                $changedFile = $changedFileList[$name];
+            }
+
+            // Both coverage & diff
+            if (!is_null($coverageFile) && !is_null($changedFile)) {
+                $mergedFileList[] = new FileCoverageChanged(
                     $coverageFile,
-                    $rawFileLineList
+                    $changedFile,
+                    $rawLineList
+                );
+
+            // Coverage only
+            } elseif (!is_null($coverageFile) && is_null($changedFile)) {
+                $mergedFileList[] = new FileCoverageUnchanged(
+                    $coverageFile,
+                    $rawLineList
+                );
+
+            // Diff only
+            } elseif (is_null($coverageFile) && !is_null($changedFile)) {
+                $mergedFileList[] = new FileNoCoverageChanged(
+                    $changedFile,
+                    $rawLineList
+                );
+
+            // Neither coverage nor diff
+            } else {
+                $mergedFileList[] = new FileNoCoverageUnchanged(
+                    $rawLineList,
+                    $name
                 );
             }
         }

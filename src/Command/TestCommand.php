@@ -16,6 +16,7 @@ namespace ptlis\CoverageMonitor\Command;
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
 use ptlis\CoverageMonitor\Serializer\JsonFilesInRevisionsSerializer;
 use ptlis\CoverageMonitor\Serializer\JsonRevisionCoverageSerializer;
+use ptlis\CoverageMonitor\Unified\RawFileList;
 use ptlis\CoverageMonitor\Unified\RevisionCoverage;
 use ptlis\ShellCommand\ShellCommandBuilder;
 use ptlis\ShellCommand\UnixEnvironment;
@@ -183,10 +184,11 @@ class TestCommand extends Command
             $this->writeInitialOutput($output, '    Processing Results');
 
             try {
+                $rawFileList = new RawFileList(realpath($workingDirectory), $codePathList);
                 $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
                 $changeset = $meta->getChangeset($revision);
 
-                $revisionCoverage = new RevisionCoverage($revision, $coverage, $changeset);
+                $revisionCoverage = new RevisionCoverage($revision, $coverage, $changeset, $rawFileList);
                 $revisionCoverageList[] = $revisionCoverage;
 
                 $serializer = new JsonRevisionCoverageSerializer();

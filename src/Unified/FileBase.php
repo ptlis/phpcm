@@ -34,15 +34,18 @@ abstract class FileBase implements FileInterface
     /**
      * Internal method to build a unified list of lines.
      *
-     * @param CoverageFile $coverageFile
      * @param string[] $rawLineList
+     * @param CoverageFile|null $coverageFile
      * @param DiffFile|null $diffFile
      */
-    protected function internalGetLines(CoverageFile $coverageFile, array $rawLineList, DiffFile $diffFile = null)
+    protected function internalGetLines(array $rawLineList, CoverageFile $coverageFile = null, DiffFile $diffFile = null)
     {
         $unifiedLineList = array();
-        $coverageLineList = $coverageFile->getLines();
         $diffLineList = $this->getDiffLines($diffFile);
+        $coverageLineList = array();
+        if (!is_null($coverageFile)) {
+            $coverageLineList = $coverageFile->getLines();
+        }
 
         // Setup loop variables
         $originalLineNo = 1;
