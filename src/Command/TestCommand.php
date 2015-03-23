@@ -16,15 +16,11 @@ namespace ptlis\CoverageMonitor\Command;
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
 use ptlis\CoverageMonitor\Serializer\JsonFilesInRevisionsSerializer;
 use ptlis\CoverageMonitor\Serializer\JsonRevisionCoverageSerializer;
-use ptlis\CoverageMonitor\Unified\FileChanged;
-use ptlis\CoverageMonitor\Unified\FileUnchanged;
 use ptlis\CoverageMonitor\Unified\RevisionCoverage;
 use ptlis\ShellCommand\ShellCommandBuilder;
 use ptlis\ShellCommand\UnixEnvironment;
 use ptlis\CoverageMonitor\CommandWrapper\ComposerUpdate;
 use ptlis\CoverageMonitor\CommandWrapper\PhpUnit;
-use ptlis\CoverageMonitor\Coverage\CoverageDirectory;
-use ptlis\CoverageMonitor\Coverage\CoverageFile;
 use ptlis\Vcs\Git\GitVcs;
 use ptlis\Vcs\Shared\CommandExecutor;
 use Symfony\Component\Console\Command\Command;
@@ -39,6 +35,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 class TestCommand extends Command
 {
     /**
+     * The path to the repository.
+     */
+    const REPOSITORY_PATH = 'repository-path';
+
+    /**
+     * Returned code must be in one of these paths..
+     */
+    const CODE_PATH_FILTER = 'code-path-filter';
+
+
+    /**
      * Configure the command metadata.
      */
     public function configure()
@@ -47,9 +54,15 @@ class TestCommand extends Command
             ->setName('run')
             ->setDescription('Run the command')
             ->addArgument(
-                'path',
+                self::REPOSITORY_PATH,
                 InputArgument::REQUIRED,
                 'The path to the repository'
+            )
+            ->addOption(
+                self::CODE_PATH_FILTER,
+                null,
+                InputArgument::OPTIONAL,
+                'Filter for code paths paths to read from.'
             );
     }
 
@@ -71,7 +84,15 @@ class TestCommand extends Command
             realpath(__DIR__ . '/../../vendor/bin/phpunit')
         );
 
-        $workingDirectory = $input->getArgument('path');
+        $workingDirectory = $input->getArgument(self::REPOSITORY_PATH);
+        $rawCodePaths = $input->getOption(self::CODE_PATH_FILTER);
+        $explodedCodePaths = explode(',', $rawCodePaths);
+
+        $codePathList = array();
+        foreach ($explodedCodePaths as $codePath) {
+            $codePathList[] = trim($codePath, DIRECTORY_SEPARATOR);
+        }
+
 
         $vcs = new GitVcs(
             new CommandExecutor(
