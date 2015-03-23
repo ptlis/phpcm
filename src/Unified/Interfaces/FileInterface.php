@@ -36,7 +36,7 @@ interface FileInterface
     public function getNewFilename();
 
     /**
-     * Get the operation performed on the file (one of ptlis\DiffParser\File class constants).
+     * Get the operation performed on the file (one of class constants).
      *
      * @return string
      */
