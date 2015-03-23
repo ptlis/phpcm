@@ -15,7 +15,7 @@ namespace ptlis\CoverageMonitor\Test\Unit\Unified;
 
 use ptlis\CoverageMonitor\Coverage\CoverageFile;
 use ptlis\CoverageMonitor\Coverage\CoverageLine;
-use ptlis\CoverageMonitor\Unified\FileChanged;
+use ptlis\CoverageMonitor\Unified\FileCoverageChanged;
 use ptlis\CoverageMonitor\Unified\LineCoverageChanged;
 use ptlis\CoverageMonitor\Unified\LineCoverageUnchanged;
 use ptlis\CoverageMonitor\Unified\LineNoCoverageChanged;
@@ -24,11 +24,11 @@ use ptlis\DiffParser\File;
 use ptlis\DiffParser\Hunk;
 use ptlis\DiffParser\Line as DiffLine;
 
-class FileChangedTest extends \PHPUnit_Framework_TestCase
+class FileCoverageChangedTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateDiffAddSuccess()
     {
-        $file = new FileChanged(
+        $file = new FileCoverageChanged(
             new CoverageFile(
                 '/home/bob/package/src/real.php',
                 array(
@@ -103,7 +103,7 @@ class FileChangedTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateDiffRemoveSuccess()
     {
-        $file = new FileChanged(
+        $file = new FileCoverageChanged(
             new CoverageFile(
                 '/home/bob/package/src/real.php',
                 array(
@@ -150,7 +150,7 @@ class FileChangedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            FileChanged::CHANGED,
+            FileCoverageChanged::CHANGED,
             $file->getOperation()
         );
 

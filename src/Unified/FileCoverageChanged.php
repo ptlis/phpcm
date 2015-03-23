@@ -17,7 +17,7 @@ use ptlis\CoverageMonitor\Coverage\CoverageFile;
 use ptlis\CoverageMonitor\Unified\Interfaces\FileInterface;
 use ptlis\DiffParser\File as DiffFile;
 
-class FileChanged extends FileBase implements FileInterface
+class FileCoverageChanged extends FileBase implements FileInterface
 {
     /**
      * @var CoverageFile
@@ -47,7 +47,7 @@ class FileChanged extends FileBase implements FileInterface
         $this->coverageFile = $coverageFile;
         $this->diffFile = $diffFile;
         $this->fileLineList = $fileLineList;
-        $this->internalGetLines($this->coverageFile, $this->fileLineList, $this->diffFile);
+        $this->internalGetLines($this->fileLineList, $this->coverageFile, $this->diffFile);
     }
 
     /**

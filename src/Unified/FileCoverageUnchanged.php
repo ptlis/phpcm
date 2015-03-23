@@ -17,7 +17,7 @@ use ptlis\CoverageMonitor\Coverage\CoverageFile;
 use ptlis\CoverageMonitor\Unified\Interfaces\FileInterface;
 use ptlis\CoverageMonitor\Unified\Interfaces\LineInterface;
 
-class FileUnchanged extends FileBase implements FileInterface
+class FileCoverageUnchanged extends FileBase implements FileInterface
 {
     /**
      * @var CoverageFile
@@ -40,7 +40,7 @@ class FileUnchanged extends FileBase implements FileInterface
     {
         $this->coverageFile = $coverageFile;
         $this->fileLineList = $fileLineList;
-        $this->internalGetLines($this->coverageFile, $this->fileLineList);
+        $this->internalGetLines($this->fileLineList, $this->coverageFile);
     }
 
     /**

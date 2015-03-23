@@ -15,15 +15,15 @@ namespace ptlis\CoverageMonitor\Test\Unit\Unified;
 
 use ptlis\CoverageMonitor\Coverage\CoverageFile;
 use ptlis\CoverageMonitor\Coverage\CoverageLine;
-use ptlis\CoverageMonitor\Unified\FileUnchanged;
+use ptlis\CoverageMonitor\Unified\FileCoverageUnchanged;
 use ptlis\CoverageMonitor\Unified\LineCoverageUnchanged;
 use ptlis\CoverageMonitor\Unified\LineNoCoverageUnchanged;
 
-class FileUnchangedTest extends \PHPUnit_Framework_TestCase
+class FileCoverageUnchangedTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateSuccess()
     {
-        $file = new FileUnchanged(
+        $file = new FileCoverageUnchanged(
             new CoverageFile(
                 '/home/bob/package/src/real.php',
                 array(
@@ -55,7 +55,7 @@ class FileUnchangedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            FileUnchanged::UNCHANGED,
+            FileCoverageUnchanged::UNCHANGED,
             $file->getOperation()
         );
 
