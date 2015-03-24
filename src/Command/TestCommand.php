@@ -20,7 +20,7 @@ use ptlis\CoverageMonitor\Unified\RawFileList;
 use ptlis\CoverageMonitor\Unified\RevisionCoverage;
 use ptlis\ShellCommand\ShellCommandBuilder;
 use ptlis\ShellCommand\UnixEnvironment;
-use ptlis\CoverageMonitor\CommandWrapper\ComposerUpdate;
+use ptlis\CoverageMonitor\CommandWrapper\ComposerInstall;
 use ptlis\CoverageMonitor\CommandWrapper\PhpUnit;
 use ptlis\Vcs\Git\GitVcs;
 use ptlis\Vcs\Shared\CommandExecutor;
@@ -79,7 +79,7 @@ class TestCommand extends Command
     {
         $commandBuilder = new ShellCommandBuilder(new UnixEnvironment());
 
-        $composerUpCommand = new ComposerUpdate($commandBuilder);
+        $composerUpCommand = new ComposerInstall($commandBuilder);
         $phpUnitCommand = new PhpUnit(
             $commandBuilder,
             realpath(__DIR__ . '/../../vendor/bin/phpunit')

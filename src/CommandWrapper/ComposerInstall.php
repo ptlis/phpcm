@@ -19,7 +19,7 @@ use ptlis\ShellCommand\Interfaces\CommandResultInterface;
 /**
  * Wrapper around composer update command building & execution.
  */
-class ComposerUpdate implements CommandWrapperInterface
+class ComposerInstall implements CommandWrapperInterface
 {
     /**
      * @var CommandBuilderInterface
@@ -51,7 +51,7 @@ class ComposerUpdate implements CommandWrapperInterface
             ->setCwd($workingDirectory)
             ->setCommand('composer')
             ->addArguments(array(
-                'update'
+                'install'
             ))
             ->buildCommand();
 
