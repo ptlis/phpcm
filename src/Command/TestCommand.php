@@ -13,6 +13,9 @@
 
 namespace ptlis\CoverageMonitor\Command;
 
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
 use ptlis\CoverageMonitor\Serializer\JsonFilesInRevisionsSerializer;
 use ptlis\CoverageMonitor\Serializer\JsonRevisionCoverageSerializer;
@@ -105,11 +108,14 @@ class TestCommand extends Command
 
 
         // Setup custom styles
-        $errorStyle = new OutputFormatterStyle('white', 'red');
+        $errorStyle = new OutputFormatterStyle('black', 'red');
         $output->getFormatter()->setStyle('command-error', $errorStyle);
 
-        $successStyle = new OutputFormatterStyle('white', 'green');
+        $successStyle = new OutputFormatterStyle('black', 'green');
         $output->getFormatter()->setStyle('command-success', $successStyle);
+
+        $skipStyle = new OutputFormatterStyle('black', 'yellow');
+        $output->getFormatter()->setStyle('command-skip', $skipStyle);
 
 
 
@@ -122,17 +128,34 @@ class TestCommand extends Command
 
 
         // Prepare output directory
-        $buildDirectory = __DIR__ . '/../../output';
-        if (!file_exists($buildDirectory)) {
-            mkdir($buildDirectory);
+        $buildDirectory = realpath(__DIR__ . '/../../output');
+        if (file_exists($buildDirectory)) {
+            $this->clearDirectory($buildDirectory);
         }
+        mkdir($buildDirectory);
 
         $count = 0;
+        $revisionCount = count($revisionList);
         $outputFilenameList = array();
         $revisionCoverageList = array();
 
         /** @var \ptlis\Vcs\Interfaces\RevisionMetaInterface $revision */
         foreach (array_reverse($revisionList) as $revision) {
+            $skip = false;
+
+            // Setup Logger
+            $handler = new StreamHandler(
+                $buildDirectory . DIRECTORY_SEPARATOR . $revision->getIdentifier() . '.log.json'
+            );
+            // TODO: write custom formatter!
+            $handler->setFormatter(new JsonFormatter());
+
+            $logger = new Logger('phpcm');
+            $logger->pushHandler($handler);
+
+            $context = array(
+                'identifier' => $revision->getIdentifier()
+            );
 
             $outputFilenameList[] = array(
                 'identifier' => $revision->getIdentifier(),
@@ -145,37 +168,66 @@ class TestCommand extends Command
 
             $count++;
 
-            $output->writeln('#' . str_pad($count, strlen(count($revisionList)), ' ', STR_PAD_LEFT) . ' Revision ' . $revision->getIdentifier());
+            $output->writeln(
+                '#' . str_pad($count, strlen($revisionCount), ' ', STR_PAD_LEFT) . ' of ' . $revisionCount
+                . ' Revision ' . $revision->getIdentifier()
+            );
 
             $this->writeInitialOutput($output, '    Checking out');
             $vcs->checkoutRevision($revision->getIdentifier());
             $output->write(' <command-success>Done</command-success>', true);
 
+            $logger->addInfo('Revision ' . $revision->getIdentifier() . ' checked out', $context);
 
 
-            $this->writeInitialOutput($output, '    Running composer update');
-            $composerResult = $composerUpCommand->run($workingDirectory);
+            $this->writeInitialOutput($output, '    Running composer install.');
 
-            if (0 !== $composerResult->getExitCode()) {
-                $output->write(' <command-error>Fail</command-error>', true);
+            if (file_exists($workingDirectory . '/composer.json')) {
+                $composerResult = $composerUpCommand->run($workingDirectory);
 
-                $vcs->resetRevision();
+                if (0 !== $composerResult->getExitCode()) {
+                    $output->write(' <command-error>Fail</command-error>', true);
 
-                throw new \RuntimeException($composerResult->getStdErr(), $composerResult->getExitCode());
+                    $errorContext = $context;
+                    $errorContext['exit_code'] = $composerResult->getExitCode();
+                    $errorContext['stderr'] = $composerResult->getStdErr();
+                    $logger->addError('Error running composer install.', $errorContext);
+
+                    $skip = true;
+
+                } else {
+                    $output->write(' <command-success>Done</command-success>', true);
+                    $logger->addInfo('Composer install successful', $context);
+                }
+
             } else {
-                $output->write(' <command-success>Done</command-success>', true);
+                $output->write(' <command-skip>Skip</command-skip>', true);
+                $logger->addInfo('No composer.json, skipping composer install', $context);
             }
+
 
 
             $coveragePath = tempnam(sys_get_temp_dir(), 'coverage_monitor_');
 
             $this->writeInitialOutput($output, '    Running PHPUnit');
-            $phpUnitResult = $phpUnitCommand->run($workingDirectory, array('--coverage-clover=' . $coveragePath));
+            if (!$skip) {
+                $phpUnitResult = $phpUnitCommand->run($workingDirectory, array('--coverage-clover=' . $coveragePath));
 
-            if (0 !== $phpUnitResult->getExitCode()) {
-                $output->write(' <command-error>Fail</command-error>', true);
+                if (0 !== $phpUnitResult->getExitCode()) {
+                    $output->write(' <command-error>Fail</command-error>', true);
+
+                    $errorContext = $context;
+                    $errorContext['exit_code'] = $phpUnitResult->getExitCode();
+                    $errorContext['stderr'] = $phpUnitResult->getStdErr();
+                    $logger->addError('Error running PHPUnit.', $errorContext);
+
+                } else {
+                    $output->write(' <command-success>Done</command-success>', true);
+                    $logger->addInfo('PHPUnit completed successfully', $context);
+                }
             } else {
-                $output->write(' <command-success>Done</command-success>', true);
+                $output->write(' <command-skip>Skip</command-skip>', true);
+                $logger->addInfo('PHPUnit skipped', $context);
             }
 
 
@@ -185,7 +237,12 @@ class TestCommand extends Command
 
             try {
                 $rawFileList = new RawFileList(realpath($workingDirectory), $codePathList);
-                $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
+                $coverage = null;
+                try {
+                    $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
+                } catch (\RuntimeException $e) {
+                    // We don't need to do anything.
+                }
                 $changeset = $meta->getChangeset($revision);
 
                 $revisionCoverage = new RevisionCoverage($revision, $coverage, $changeset, $rawFileList);
@@ -202,6 +259,10 @@ class TestCommand extends Command
 
             } catch (\RuntimeException $e) {
                 $output->write(' <command-error>Fail</command-error>', true);
+
+                $errorContext = $context;
+                $errorContext['message'] = $e->getMessage();
+                $logger->addError('Error processing results.', $errorContext);
             }
 
 
@@ -209,6 +270,25 @@ class TestCommand extends Command
 
 
             $vcs->resetRevision();
+
+            // Cleanup any 'mess'
+            $resetCommand = $commandBuilder
+                ->setCwd($workingDirectory)
+                ->setCommand('git')
+                ->addArguments(array(
+                    'git reset --hard'
+                ))
+                ->buildCommand();
+            $resetCommand->runSynchronous();
+
+            $clearCommand = $commandBuilder
+                ->setCwd($workingDirectory)
+                ->setCommand('git')
+                ->addArguments(array(
+                    'git clean -fd'
+                ))
+                ->buildCommand();
+            $clearCommand->runSynchronous();
 
             $output->writeln('');
         }
@@ -228,5 +308,21 @@ class TestCommand extends Command
         $output->write(
             str_pad($text, 72, '.')
         );
+    }
+
+    /**
+     * Delete the specified directory and it's contents.
+     *
+     * @param string $dir
+     */
+    public function clearDirectory($dir) {
+        foreach(glob($dir . '/*') as $file) {
+            if (is_dir($file)) {
+                $this->clearDirectory($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dir);
     }
 }

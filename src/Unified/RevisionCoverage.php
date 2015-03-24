@@ -29,7 +29,7 @@ class RevisionCoverage
     private $revision;
 
     /**
-     * @var CoverageInterface
+     * @var CoverageInterface|null
      */
     private $coverage;
 
@@ -53,13 +53,13 @@ class RevisionCoverage
      * Constructor.
      *
      * @param RevisionMeta $revision
-     * @param CoverageInterface $coverage
+     * @param CoverageInterface|null $coverage
      * @param Changeset $changeset
      * @param RawFileList $rawFileList
      */
     public function __construct(
         RevisionMeta $revision,
-        CoverageInterface $coverage,
+        CoverageInterface $coverage = null,
         Changeset $changeset,
         RawFileList $rawFileList
     ) {
@@ -128,8 +128,10 @@ class RevisionCoverage
     private function buildLines()
     {
         $coverageFileList = array();
-        foreach ($this->coverage->getFiles() as $coverageFile) {
-            $coverageFileList[$coverageFile->getRelativePath()] = $coverageFile;
+        if (!is_null($this->coverage)) {
+            foreach ($this->coverage->getFiles() as $coverageFile) {
+                $coverageFileList[$coverageFile->getRelativePath()] = $coverageFile;
+            }
         }
 
         $changedFileList = array();

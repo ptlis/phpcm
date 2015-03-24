@@ -42,7 +42,7 @@ class RawFileList
         }
 
         $composerData = json_decode(file_get_contents($composerPath), true);
-        if (false === $composerData) {
+        if (!is_array($composerData)) {
             throw new \RuntimeException('composer.json not found');
         }
 
