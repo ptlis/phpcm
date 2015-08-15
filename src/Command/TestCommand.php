@@ -16,7 +16,9 @@ namespace ptlis\CoverageMonitor\Command;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use ptlis\CoverageMonitor\Config\ConfigReader;
 use ptlis\CoverageMonitor\Coverage\CoverageClover;
+use ptlis\CoverageMonitor\Packages\BuildTestSpecifications;
 use ptlis\CoverageMonitor\Serializer\JsonFilesInRevisionsSerializer;
 use ptlis\CoverageMonitor\Serializer\JsonRevisionCoverageSerializer;
 use ptlis\CoverageMonitor\Unified\RawFileList;
@@ -88,7 +90,7 @@ class TestCommand extends Command
             realpath(__DIR__ . '/../../vendor/bin/phpunit')
         );
 
-        $workingDirectory = $input->getArgument(self::REPOSITORY_PATH);
+        $packageDirectory = $input->getArgument(self::REPOSITORY_PATH);
         $rawCodePaths = $input->getOption(self::CODE_PATH_FILTER);
         $explodedCodePaths = explode(',', $rawCodePaths);
 
@@ -102,7 +104,7 @@ class TestCommand extends Command
             new CommandExecutor(
                 $commandBuilder,
                 '/usr/bin/git',
-                $workingDirectory
+                $packageDirectory
             )
         );
 
@@ -120,15 +122,39 @@ class TestCommand extends Command
 
 
 
+        // Read revision data
         $meta = $vcs->getMeta();
-
-        $revisionList = $meta->getRevisions();
-
+        $revisionList = array_reverse($meta->getRevisions());
         $output->writeln('Found ' . count($revisionList) . ' revisions.');
 
 
+        // Read configuration from source repository
+        $configReader = new ConfigReader();
+        $config = $configReader->read($packageDirectory);
+
+        // Get Test Specifications from package configuration
+        $testSpecificationBuilder = new BuildTestSpecifications();
+        $installVersionList = $testSpecificationBuilder->getTestSpecifications($config);
+        $revisionSpecificationList = $testSpecificationBuilder->getRevisionTestSpecifications(
+            $installVersionList,
+            $revisionList
+        );
+
+
+        // Prepare working directory
+        if (file_exists(__DIR__ . '/../../working/test_suites')) {
+            $this->clearDirectory(__DIR__ . '/../../working/test_suites');
+        }
+        mkdir(__DIR__ . '/../../working/test_suites');
+
+// Prepare test suites
+dump( $revisionSpecificationList);
+
+die();
+
+
         // Prepare output directory
-        $buildDirectory = realpath(__DIR__ . '/../../output');
+        $buildDirectory = __DIR__ . '/../../output';
         if (file_exists($buildDirectory)) {
             $this->clearDirectory($buildDirectory);
         }
@@ -140,7 +166,7 @@ class TestCommand extends Command
         $revisionCoverageList = array();
 
         /** @var \ptlis\Vcs\Interfaces\RevisionMetaInterface $revision */
-        foreach (array_reverse($revisionList) as $revision) {
+        foreach ($revisionList as $revision) {
             $skip = false;
 
             // Setup Logger
@@ -182,8 +208,8 @@ class TestCommand extends Command
 
             $this->writeInitialOutput($output, '    Running composer install.');
 
-            if (file_exists($workingDirectory . '/composer.json')) {
-                $composerResult = $composerUpCommand->run($workingDirectory);
+            if (file_exists($packageDirectory . '/composer.json')) {
+                $composerResult = $composerUpCommand->run($packageDirectory);
 
                 if (0 !== $composerResult->getExitCode()) {
                     $output->write(' <command-error>Fail</command-error>', true);
@@ -211,7 +237,7 @@ class TestCommand extends Command
 
             $this->writeInitialOutput($output, '    Running PHPUnit');
             if (!$skip) {
-                $phpUnitResult = $phpUnitCommand->run($workingDirectory, array('--coverage-clover=' . $coveragePath));
+                $phpUnitResult = $phpUnitCommand->run($packageDirectory, array('--coverage-clover=' . $coveragePath));
 
                 if (0 !== $phpUnitResult->getExitCode()) {
                     $output->write(' <command-error>Fail</command-error>', true);
@@ -236,10 +262,10 @@ class TestCommand extends Command
             $this->writeInitialOutput($output, '    Processing Results');
 
             try {
-                $rawFileList = new RawFileList(realpath($workingDirectory), $codePathList);
+                $rawFileList = new RawFileList(realpath($packageDirectory), $codePathList);
                 $coverage = null;
                 try {
-                    $coverage = new CoverageClover($coveragePath, realpath($workingDirectory));
+                    $coverage = new CoverageClover($coveragePath, realpath($packageDirectory));
                 } catch (\RuntimeException $e) {
                     // We don't need to do anything.
                 }
@@ -273,19 +299,19 @@ class TestCommand extends Command
 
             // Cleanup any 'mess'
             $resetCommand = $commandBuilder
-                ->setCwd($workingDirectory)
+                ->setCwd($packageDirectory)
                 ->setCommand('git')
                 ->addArguments(array(
-                    'git reset --hard'
+                    'reset --hard'
                 ))
                 ->buildCommand();
             $resetCommand->runSynchronous();
 
             $clearCommand = $commandBuilder
-                ->setCwd($workingDirectory)
+                ->setCwd($packageDirectory)
                 ->setCommand('git')
                 ->addArguments(array(
-                    'git clean -fd'
+                    'clean -fd'
                 ))
                 ->buildCommand();
             $clearCommand->runSynchronous();

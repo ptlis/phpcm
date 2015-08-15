@@ -21,3 +21,10 @@ A simple tool providing metrics on how well tested your project is over time as 
         * Contributors with a positive impact on coverage.
         * Contributors with a negative impact on coverage.
     * Other interesting stuff?
+
+
+## TODO
+
+* Ensure that we make a distinction between text-based & binary file types - Simple solution - only proceed for files that end with .php ?
+* The current implementation _will_ have memory issues on large projects.
+* Config -> test spec should have better names (etc)

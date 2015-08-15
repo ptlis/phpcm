@@ -1,0 +1,28 @@
+
+# MetaYaml Schema for .phpcm.yml files
+
+root:
+    _type: array
+    _children:
+
+        # test packages metadata
+        test_packages:
+            _type: prototype
+            _required: true
+            _prototype:
+                _type: array
+                _children:
+
+                    # Metadata, test package and version, revision constraint & whether to add to include path
+                    package:
+                        _type: text
+                        _required: true
+                    from:
+                        _type: text
+                        _required: true
+                    version:
+                        _type: text
+                        _required: true
+                    include_path:
+                        _type: text
+                        _required: true
