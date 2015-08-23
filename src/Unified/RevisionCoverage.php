@@ -16,7 +16,7 @@ namespace ptlis\CoverageMonitor\Unified;
 use ptlis\CoverageMonitor\Coverage\Interfaces\CoverageInterface;
 use ptlis\CoverageMonitor\Unified\Interfaces\FileInterface;
 use ptlis\DiffParser\Changeset;
-use ptlis\Vcs\Shared\RevisionMeta;
+use ptlis\Vcs\Interfaces\RevisionMetaInterface;
 
 /**
  * Contains the coverage and changeset data for a single VCS revision.
@@ -52,13 +52,13 @@ class RevisionCoverage
     /**
      * Constructor.
      *
-     * @param RevisionMeta $revision
+     * @param RevisionMetaInterface $revision
      * @param CoverageInterface|null $coverage
      * @param Changeset $changeset
      * @param RawFileList $rawFileList
      */
     public function __construct(
-        RevisionMeta $revision,
+        RevisionMetaInterface $revision,
         CoverageInterface $coverage = null,
         Changeset $changeset,
         RawFileList $rawFileList
