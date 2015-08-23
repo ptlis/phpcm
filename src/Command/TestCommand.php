@@ -85,10 +85,6 @@ class TestCommand extends Command
         $commandBuilder = new ShellCommandBuilder(new UnixEnvironment());
 
         $composerUpCommand = new ComposerInstall($commandBuilder);
-        $phpUnitCommand = new PhpUnit(
-            $commandBuilder,
-            realpath(__DIR__ . '/../../vendor/bin/phpunit')
-        );
 
         $packageDirectory = $input->getArgument(self::REPOSITORY_PATH);
         $rawCodePaths = $input->getOption(self::CODE_PATH_FILTER);
@@ -125,6 +121,7 @@ class TestCommand extends Command
         // Read revision data
         $meta = $vcs->getMeta();
         $revisionList = array_reverse($meta->getRevisions());
+
         $output->writeln('Found ' . count($revisionList) . ' revisions.');
 
 
@@ -142,16 +139,11 @@ class TestCommand extends Command
 
 
         // Prepare working directory
-        if (file_exists(__DIR__ . '/../../working/test_suites')) {
-            $this->clearDirectory(__DIR__ . '/../../working/test_suites');
+        $workingDirectory = realpath(__DIR__ . '/../../working/test_suites');
+        if (file_exists($workingDirectory)) {
+            $this->clearDirectory($workingDirectory);
         }
-        mkdir(__DIR__ . '/../../working/test_suites');
-
-// Prepare test suites
-dump( $revisionSpecificationList);
-
-die();
-
+        mkdir($workingDirectory);
 
         // Prepare output directory
         $buildDirectory = __DIR__ . '/../../output';
@@ -160,14 +152,99 @@ die();
         }
         mkdir($buildDirectory);
 
+
+        // Install versions
+        foreach ($installVersionList as $installVersion) {
+
+            $installDir = implode(
+                DIRECTORY_SEPARATOR,
+                array(
+                    $workingDirectory,
+                    $installVersion->getName() . '-' . $installVersion->getVersion()
+                )
+            );
+
+            if (!file_exists($installDir)) {
+                mkdir($installDir, 0755, true);
+
+                $downloadMethod = $installVersion->getDownloadMethod();
+
+                switch ($downloadMethod) {
+                    case 'packagist':
+                        $composerJson = array(
+                            'require' => array(
+                                $installVersion->getName() => (string)$installVersion->getVersion()
+                            ),
+                            'config' => array(
+                                'bin-dir' => 'bin'
+                            )
+                        );
+
+                        file_put_contents(
+                            $installDir . DIRECTORY_SEPARATOR . 'composer.json',
+                            json_encode($composerJson)
+                        );
+
+                        $output->write(
+                            'Installing ' . $installVersion->getName() . ' ' . $installVersion->getVersion(), true
+                        );
+                        $composerUpCommand->run($installDir);
+
+                        $output->write(' <command-success>Done</command-success>', true);
+                        break;
+
+                    default:
+                        throw new \RuntimeException('Unknown download method "' . $downloadMethod . '" encountered');
+                }
+            }
+        }
+
+
+
+
         $count = 0;
         $revisionCount = count($revisionList);
         $outputFilenameList = array();
         $revisionCoverageList = array();
 
+        $startOffset = 388; // Where to begin
+        $limit = 50;        // How many to process (if 0 then process all)
+
+
         /** @var \ptlis\Vcs\Interfaces\RevisionMetaInterface $revision */
         foreach ($revisionList as $revision) {
             $skip = false;
+
+            $count++;
+
+            if ($limit > 0) {
+
+                // Skip until we reach beginning
+                if ($count-1 < $startOffset) {
+                    continue;
+                }
+
+                if ($count-1 > $startOffset + $limit) {
+                    break;
+                }
+            }
+
+            $testSpecification = $revisionSpecificationList[$revision->getIdentifier()];
+
+
+            $installDir = implode(
+                DIRECTORY_SEPARATOR,
+                array(
+                    $workingDirectory,
+                    $testSpecification->getName() . '-' . $testSpecification->getVersion()
+                )
+            );
+
+            $phpUnitCommand = new PhpUnit(
+                $commandBuilder,
+                $installDir . '/bin/phpunit'
+            );
+
 
             // Setup Logger
             $handler = new StreamHandler(
@@ -191,8 +268,6 @@ die();
                 'message' => $revision->getMessage(),
                 'filename' => $revision->getIdentifier() . '.json'
             );
-
-            $count++;
 
             $output->writeln(
                 '#' . str_pad($count, strlen($revisionCount), ' ', STR_PAD_LEFT) . ' of ' . $revisionCount
@@ -239,12 +314,13 @@ die();
             if (!$skip) {
                 $phpUnitResult = $phpUnitCommand->run($packageDirectory, array('--coverage-clover=' . $coveragePath));
 
-                if (0 !== $phpUnitResult->getExitCode()) {
+                if (filesize($coveragePath) < 1) {
                     $output->write(' <command-error>Fail</command-error>', true);
 
                     $errorContext = $context;
                     $errorContext['exit_code'] = $phpUnitResult->getExitCode();
                     $errorContext['stderr'] = $phpUnitResult->getStdErr();
+                    $errorContext['stdout'] = $phpUnitResult->getStdOut();
                     $logger->addError('Error running PHPUnit.', $errorContext);
 
                 } else {
@@ -342,11 +418,13 @@ die();
      * @param string $dir
      */
     public function clearDirectory($dir) {
-        foreach(glob($dir . '/*') as $file) {
-            if (is_dir($file)) {
-                $this->clearDirectory($file);
+        foreach(array_diff(scandir($dir), array('.','..')) as $file) {
+            $filePath = $dir . DIRECTORY_SEPARATOR . $file;
+
+            if (is_dir($filePath)) {
+                $this->clearDirectory($filePath);
             } else {
-                unlink($file);
+                unlink($filePath);
             }
         }
         rmdir($dir);

@@ -155,7 +155,8 @@ class BuildTestSpecifications
         foreach ($identifierList as $identifier) {
             $identifierToVersionList[$identifier] = new TestSpecification(
                 $packageName,
-                $largestVersion
+                $largestVersion,
+                'packagist'     // TODO: Don't hardcode!
             );
         }
 
