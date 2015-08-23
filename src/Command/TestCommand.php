@@ -74,11 +74,10 @@ class TestCommand extends Command
                 InputArgument::REQUIRED,
                 'The path to the repository'
             )
-            ->addOption(
+            ->addArgument(
                 self::CODE_PATH_FILTER,
-                null,
-                InputArgument::OPTIONAL,
-                'Filter for code paths paths to read from.'
+                InputArgument::REQUIRED,
+                'Paths to build coverage on.'
             )
             ->addOption(
                 self::FROM_REVISION,
@@ -109,7 +108,7 @@ class TestCommand extends Command
         $composerUpCommand = new ComposerInstall($commandBuilder);
 
         $packageDirectory = $input->getArgument(self::REPOSITORY_PATH);
-        $rawCodePaths = $input->getOption(self::CODE_PATH_FILTER);
+        $rawCodePaths = $input->getArgument(self::CODE_PATH_FILTER);
         $explodedCodePaths = explode(',', $rawCodePaths);
 
         $codePathList = array();
@@ -247,16 +246,11 @@ class TestCommand extends Command
             $count++;
 
             if (!$started) {
-
                 if ($fromRevision === $revision->getIdentifier()) {
                     $started = true;
                 } else {
                     continue;
                 }
-            }
-
-            if ($toRevision === $revision->getIdentifier()) {
-                break;
             }
 
             $testSpecification = $revisionSpecificationList[$revision->getIdentifier()];
@@ -423,6 +417,11 @@ class TestCommand extends Command
             $clearCommand->runSynchronous();
 
             $output->writeln('');
+
+
+            if ($toRevision === $revision->getIdentifier()) {
+                break;
+            }
         }
 
         $file = new \SplFileObject($buildDirectory . '/revision_list.json', 'w');
