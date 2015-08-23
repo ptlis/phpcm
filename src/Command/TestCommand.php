@@ -50,6 +50,16 @@ class TestCommand extends Command
      */
     const CODE_PATH_FILTER = 'code-path-filter';
 
+    /**
+     * The revision to begin process with.
+     */
+    const FROM_REVISION = 'from-revision';
+
+    /**
+     * The last revision to process before results aggregation.
+     */
+    const TO_REVISION = 'to-revision';
+
 
     /**
      * Configure the command metadata.
@@ -69,6 +79,18 @@ class TestCommand extends Command
                 null,
                 InputArgument::OPTIONAL,
                 'Filter for code paths paths to read from.'
+            )
+            ->addOption(
+                self::FROM_REVISION,
+                null,
+                InputArgument::OPTIONAL,
+                'Begin from this commit'
+            )
+            ->addOption(
+                self::TO_REVISION,
+                null,
+                InputArgument::OPTIONAL,
+                'Stop after this commit'
             );
     }
 
@@ -207,8 +229,15 @@ class TestCommand extends Command
         $outputFilenameList = array();
         $revisionCoverageList = array();
 
-        $startOffset = 388; // Where to begin
-        $limit = 50;        // How many to process (if 0 then process all)
+
+        $fromRevision = $input->getOption(self::FROM_REVISION);
+        $toRevision = $input->getOption(self::TO_REVISION);
+
+        $started = false;
+        if (!strlen($fromRevision)) {
+            $started = true;
+        }
+
 
 
         /** @var \ptlis\Vcs\Interfaces\RevisionMetaInterface $revision */
@@ -217,16 +246,17 @@ class TestCommand extends Command
 
             $count++;
 
-            if ($limit > 0) {
+            if (!$started) {
 
-                // Skip until we reach beginning
-                if ($count-1 < $startOffset) {
+                if ($fromRevision === $revision->getIdentifier()) {
+                    $started = true;
+                } else {
                     continue;
                 }
+            }
 
-                if ($count-1 > $startOffset + $limit) {
-                    break;
-                }
+            if ($toRevision === $revision->getIdentifier()) {
+                break;
             }
 
             $testSpecification = $revisionSpecificationList[$revision->getIdentifier()];
